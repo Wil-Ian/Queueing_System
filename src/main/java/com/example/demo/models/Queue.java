@@ -22,7 +22,17 @@ public class Queue {
     private User user;
 
     private String status;
+
     private Integer callCount;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
+    @Column(name = "serving_started_at")
+    private LocalDateTime servingStartedAt;
 
     public Integer getQueueId() {
         return queueId;
@@ -70,5 +80,29 @@ public class Queue {
 
     public void setCallCount(Integer callCount) {
         this.callCount = callCount;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
+    }
+
+    public LocalDateTime getServingStartedAt() {
+        return servingStartedAt;
+    }
+
+    public void setServingStartedAt(LocalDateTime servingStartedAt) {
+        this.servingStartedAt = servingStartedAt;
     }
 }

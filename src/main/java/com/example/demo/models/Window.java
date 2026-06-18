@@ -17,6 +17,9 @@ public class Window {
     @JoinColumn(name = "queue_id")
     private Queue queue;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     public Integer getWindowId() {
         return windowId;
     }
@@ -39,5 +42,13 @@ public class Window {
 
     public void setQueue(Queue queue) {
         this.queue = queue;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }

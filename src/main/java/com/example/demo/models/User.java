@@ -21,6 +21,9 @@ public class User {
     @Column(name = "time_stamp")
     private LocalDateTime timeStamp;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     public Integer getUserId() {
         return userId;
     }
@@ -59,6 +62,14 @@ public class User {
 
     public void setTimeStamp(LocalDateTime timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
 

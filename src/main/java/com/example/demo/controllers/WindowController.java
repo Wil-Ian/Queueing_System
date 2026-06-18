@@ -27,4 +27,14 @@ public class WindowController {
     public Window createWindow(@RequestBody Window window) {
         return windowService.createWindow(window);
     }
+
+    @PutMapping("/{id}")
+    public Window updateWindow(@PathVariable Integer id, @RequestBody Window window) {
+        return windowService.updateWindow(id, window);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteWindow (@PathVariable Integer id) {
+        windowService.deleteWindow(id);
+    }
 }

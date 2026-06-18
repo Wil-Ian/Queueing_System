@@ -12,6 +12,9 @@ public class Employee extends Person{
     @JoinColumn(name= "window_id")
     private Window window;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     public Integer getEmployeeId() {
         return employeeId;
     }
@@ -26,5 +29,13 @@ public class Employee extends Person{
 
     public void setWindow(Window window) {
         this.window = window;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }

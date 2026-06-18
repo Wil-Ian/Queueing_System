@@ -1,11 +1,13 @@
 package com.example.demo.services;
 
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Employee;
 import com.example.demo.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -17,10 +19,33 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeRepository.findByIsActiveTrue();
     }
 
     public Employee createEmployee(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    public Employee updateEmployee(Integer id, Employee updatedEmployee) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(id);
+        if(existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            employee.setEmail(updatedEmployee.getEmail());
+            employee.setName(updatedEmployee.getName());
+            employee.setWindow(updatedEmployee.getWindow());
+            return employeeRepository.save(employee);
+        }
+        throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+    }
+
+    public void deleteEmployee(Integer id) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(id);
+        if(existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            employee.setActive(false);
+            employeeRepository.save(employee);
+        } else {
+            throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+        }
     }
 }
