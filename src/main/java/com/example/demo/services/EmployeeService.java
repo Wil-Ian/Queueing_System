@@ -4,6 +4,7 @@ import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Employee;
 import com.example.demo.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.Optional;
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, BCryptPasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Employee> getAllEmployees() {
@@ -23,6 +26,8 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(Employee employee) {
+        String hashedPassword = passwordEncoder.encode(employee.getPassword());
+        employee.setPassword(hashedPassword);
         return employeeRepository.save(employee);
     }
 
