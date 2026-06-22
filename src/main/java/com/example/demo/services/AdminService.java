@@ -5,6 +5,7 @@ import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Admin;
 import com.example.demo.repositories.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,11 +13,13 @@ import java.util.Optional;
 
 @Service
 public class AdminService {
-    private  final AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminService(AdminRepository adminRepository) {
+    public AdminService(AdminRepository adminRepository, BCryptPasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Admin> getAllAdmins() {
@@ -24,6 +27,8 @@ public class AdminService {
     }
 
     public Admin createAdmin(Admin admin) {
+        String hashedPassword = passwordEncoder.encode(admin.getPassword());
+        admin.setPassword(hashedPassword);
         return adminRepository.save(admin);
     }
 
