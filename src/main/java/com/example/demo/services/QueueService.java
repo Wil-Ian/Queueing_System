@@ -25,6 +25,7 @@ public class QueueService {
     }
 
     public Queue createQueue(Queue queue) {
+        queue.setTimeStamp(LocalDateTime.now());
         return queueRepository.save(queue);
     }
 
