@@ -3,8 +3,10 @@ package com.example.demo.services;
 import com.example.demo.exceptions.InvalidCredentialsException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Admin;
+import com.example.demo.models.BlacklistedTokens;
 import com.example.demo.models.Employee;
 import com.example.demo.repositories.AdminRepository;
+import com.example.demo.repositories.BlacklistedTokensRepository;
 import com.example.demo.repositories.EmployeeRepository;
 import com.example.demo.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +21,15 @@ public class AuthService {
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil util;
+    private final BlacklistedTokensRepository blacklistedTokensRepository;
 
     @Autowired
-    public AuthService(AdminRepository adminRepository, EmployeeRepository employeeRepository, BCryptPasswordEncoder passwordEncoder, JwtUtil util) {
+    public AuthService(AdminRepository adminRepository, EmployeeRepository employeeRepository, BCryptPasswordEncoder passwordEncoder, JwtUtil util, BlacklistedTokensRepository blacklistedTokensRepository) {
         this.adminRepository = adminRepository;
         this.employeeRepository = employeeRepository;
         this.passwordEncoder = passwordEncoder;
         this.util = util;
+        this.blacklistedTokensRepository = blacklistedTokensRepository;
     }
 
     public String login(String email, String password) {
@@ -48,5 +52,13 @@ public class AuthService {
         } else {
             throw new ResourceNotFoundException("No account found with this email.");
         }
+    }
+
+    public void logout(String token) {
+        String jti = util.extractJti(token);
+
+        BlacklistedTokens blacklistedToken = new BlacklistedTokens();
+        blacklistedToken.setJti(jti);
+        blacklistedTokensRepository.save(blacklistedToken);
     }
 }
