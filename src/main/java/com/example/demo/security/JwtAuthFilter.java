@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.repositories.BlacklistedTokensRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,9 +18,11 @@ import java.util.List;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil util;
+    private final BlacklistedTokensRepository blacklistedTokensRepository;
 
-    public JwtAuthFilter(JwtUtil util) {
+    public JwtAuthFilter(JwtUtil util, BlacklistedTokensRepository blacklistedTokensRepository) {
         this.util = util;
+        this.blacklistedTokensRepository = blacklistedTokensRepository;
     }
 
     @Override
@@ -34,17 +37,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             if(util.isTokenValid(token)) {
-                String email = util.extractEmail(token);
-                String role = util.extractRole(token);
+                String jti = util.extractJti(token);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                        );
+                if(!blacklistedTokensRepository.existsByJti(jti)) {
+                    String email = util.extractEmail(token);
+                    String role = util.extractRole(token);
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    email,
+                                    null,
+                                    List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                            );
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         }
 
