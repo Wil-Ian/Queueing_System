@@ -1,0 +1,168 @@
+/* Header */
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-left {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0 0 8px 0;
+}
+
+.header-text p,
+.htext-1,
+.htext-2,
+.htext-3 {
+    margin: 0;
+    padding: 0;
+}
+
+.header-text p {
+    margin: 0;
+    line-height: 1.1;
+}
+
+.htext-1 {
+    font-size: 12px;
+}
+
+.htext-2 {
+    font-size: 18px;
+}
+
+.header-hr {
+    margin: 0;
+    border: none;
+    border-top: 1px solid currentColor;
+    width: 100%;
+    height: 1px;
+}
+
+.htext-3 {
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.hr-text {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: none;
+    display: inline-block;
+    border-top: 1px;
+}
+
+.header-right {
+    margin: 0 0 6px 0;
+}
+
+.BoC-logo {
+    width: 60px;
+    height: auto;
+}
+
+/* Body */
+
+.body-main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    background: linear-gradient(to bottom, #0053A6 51%, #002040 100%);
+}
+
+.welcome-text {
+    text-align: center;
+    color: #E2C97E;
+    font-size: 96px;
+    margin-bottom: -120px;
+}
+
+.kiosk-text {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    margin-bottom: 50px;
+}
+
+.start-button {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.button {
+    background-color: #E2C97E;
+    color: #002040;
+    border: none;
+    border-radius: 5px;
+    padding: 24px 36px;
+}
+
+.body-hr {
+    background-color:#E2C97E;
+    height: 2px;
+    border-radius: 0;
+    border: none;
+    clip-path: polygon(0% 50%, 15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%);
+}
+
+/* Footer */
+
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-left {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.footer-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 8px 0;
+}
+
+.footer-text p {
+    margin: 0;
+}
+
+.footer-right {
+    margin: 0 0 6px 0;
+}
+
+.logo-1 {
+    width: 60px;
+    height: auto;
+}
+
+.logo-2 {
+    width: 60px;
+    height: auto;
+}
+
+.logo-3 {
+    width: auto;
+    height: 60px;
+}

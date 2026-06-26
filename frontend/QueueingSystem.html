@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Queueing System - Window</title>
+        <link rel="stylesheet" type="text/css" href="Queueing.css">
+    </head>
+
+    <body>
+        <div id="priorityScreen" class="priority">
+            <input type="button" class="regular_btn status_btn" value="REGULAR" id="reg">
+            <input type="button" class="priority_btn status_btn" value="PRIORITY" id="prio">
+        </div>
+
+        <div id="categoryScreen" class="category">
+            <label>RECEIVING</label>
+            <input type="button" class="receiving_btn category_btn" value="Receiving" id="receive">
+
+            <label>INQUIRY</label>
+            <input type="button" class="inquiry_btn category_btn" value="Inquiry" id="inquire">
+
+            <label>FOLLOW UP</label>
+            <input type="button" class="followup_btn category_btn" value="Follow up" id="follow">
+
+            <label>EVALUATION</label>
+            <input type="button" class="evaluation_btn category_btn" value="Evaluation" id="eval">
+
+            <label>CASHIER</label>
+            <input type="button" class="cashier_btn category_btn" value="Cashier" id="cash">
+
+            <label>APPOINTMENT</label>
+            <input type="button" class="appointment_btn" value="APPOINTMENT" id="appoint">
+        </div>
+
+        <div id="appointmentScreen" class="appoint">
+            <label>
+                <select id="officeSelect">
+                    <option>Office of the District Collector</option>
+                    <option>Deputy Collector for Administration</option>
+                    <option>Office of the Deputy Collector for Operations</option>
+                    <option>Deputy Collector for Assessment</option>
+                    <option>Deputy Collector for Passenger Service</option>
+                    <option>Administrative Division</option>
+                    <option>Aircraft Operations Division</option>
+                    <option>Auction & Cargo Disposal Division</option>
+                    <option>Export Division</option>
+                    <option>Customs Clearance Area</option>
+                    <option>Assessment Division</option>
+                    <option>Air Express Cargo Processing</option>
+                    <option>Liquidation and Billing Unit</option>
+                    <option>Customer Care Center</option>
+                    <option>Law Unit</option>
+                    <option>Enforcement and Security Services (ESS)</option>
+                    <option>X-RAY Inspection Project (XIP)</option>
+                    <option>Customs Intelligence and Investigation Services (CIIS)</option>
+                    <option>Management Information Systems and Technology Group (MISTG)</option>
+                    <option>Passenger Service and Processing Division</option>
+                </select>
+            </label>
+            <input type="submit" id="appointSubmit">
+        </div>
+
+        <div id="nameScreen" class="name">
+            <label>Please enter your name:</label>
+            <input type="text" id="nameInput">
+            <input type="submit" id="nameSubmit">
+        </div>
+
+        <div id="resultScreen" class="result">
+            <p>Thank you</p> <!-- followed by the name they inserted-->
+            <p>You are now in the queue.</p>
+            <p>Please wait until your name gets called, then head over to your respective window.</p>
+        </div>
+
+        <script src="Queueing.js"></script>
+    </body>
+</html>
