@@ -20,6 +20,9 @@ public class Window {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column
+    private String category;
+
     public Integer getWindowId() {
         return windowId;
     }
@@ -50,5 +53,13 @@ public class Window {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
