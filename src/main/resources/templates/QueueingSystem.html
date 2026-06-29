@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queueing System - Window</title>
+    <link rel="stylesheet" type="text/css" href="Queueing.css">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-main">
+        <div class="header-left header-logo">
+            <img src="assets/1002.jpg" alt="BOC Logo" class="BoC-logo">
+            <div class="header-text">
+                <div class="htext-1">
+                    <p>REPUBLIC OF THE PHILIPPINES</p>
+                </div>
+                <div class="htext-2">
+                    <p>BUREAU OF CUSTOMS</p>
+                    <hr class="header-hr">
+                </div>
+                <div class="htext-3">
+                    <p><b>PORT OF CLARK INTERNATIONAL AIRPORT</b></p>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <p id="current_time"></p>
+            <p id="current_date"></p>
+        </div>
+    </div>
+</header>
+
+<div id="startScreen" class="start">
+    <div class="body-main">
+        <div class="welcome-text">
+            <hr class="body-hr">
+            <p>WELCOME</p>
+            <hr class="body-hr">
+        </div>
+        <div class="kiosk-text">
+            <p>SELF CHECK-IN KIOSK</p>
+        </div>
+        <div class="start-button">
+            <input type="button" class="start_btn body_btn" value="CLICK TO START"><br>
+        </div>
+    </div>
+</div>
+
+<div id="priorityScreen" class="priority">
+    <div class="body-main">
+        <div class="welcome-text">
+            <p>PRIORITY TYPE</p>
+        </div>
+        <br><br><br>
+        <input type="button" class="regular_btn status_btn body_btn" value="REGULAR" id="reg"><br>
+        <input type="button" class="priority_btn status_btn body_btn" value="PRIORITY" id="prio">
+    </div>
+</div>
+
+<div id="categoryScreen" class="category">
+    <div class="body-main">
+        <div class="welcome-text">
+            <p>TRANSACTION TYPE</p>
+        </div>
+
+        <input type="button" class="receiving_btn category_btn body_btn" value="Receiving" id="receive">
+
+        <input type="button" class="inquiry_btn category_btn body_btn" value="Inquiry" id="inquire">
+
+        <input type="button" class="followup_btn category_btn body_btn" value="Follow up" id="follow">
+
+        <input type="button" class="cashier_btn category_btn body_btn" value="Cashier" id="cash">
+
+        <input type="button" class="appointment_btn body_btn" value="Appointment" id="appoint">
+    </div>
+</div>
+
+<div id="appointmentScreen" class="appoint">
+    <div class="body-main">
+        <div class="welcome-text">
+            <p>CHOOSE AN APPOINTMENT</p>
+        </div>
+        <label>
+            <select id="officeSelect">
+                <option>Office of the District Collector</option>
+                <option>Deputy Collector for Administration</option>
+                <option>Office of the Deputy Collector for Operations</option>
+                <option>Deputy Collector for Assessment</option>
+                <option>Deputy Collector for Passenger Service</option>
+                <option>Administrative Division</option>
+                <option>Aircraft Operations Division</option>
+                <option>Auction & Cargo Disposal Division</option>
+                <option>Export Division</option>
+                <option>Customs Clearance Area</option>
+                <option>Assessment Division</option>
+                <option>Air Express Cargo Processing</option>
+                <option>Liquidation and Billing Unit</option>
+                <option>Customer Care Center</option>
+                <option>Law Unit</option>
+                <option>Enforcement and Security Services (ESS)</option>
+                <option>X-RAY Inspection Project (XIP)</option>
+                <option>Customs Intelligence and Investigation Services (CIIS)</option>
+                <option>Management Information Systems and Technology Group (MISTG)</option>
+                <option>Passenger Service and Processing Division</option>
+            </select>
+        </label>
+        <input type="submit" id="appointSubmit" class="body_btn" value="SUBMIT">
+    </div>
+</div>
+
+<div id="nameScreen" class="name">
+    <div class="body-main">
+        <div class="welcome-text">
+            <p>PLEASE ENTER A NAME/NICKNAME:</p>
+        </div><br>
+        <label for="nameInput">Enter nickname here...</label>
+        <input type="text" id="nameInput">
+        <input type="submit" id="nameSubmit" class="body_btn">
+    </div>
+</div>
+
+<div id="resultScreen" class="result">
+    <div class="body-main">
+        <div class="welcome-text">
+            <p>THANK YOU!</p>
+        </div>
+        <div class="kiosk-text">
+            <p>You are now in the queue.</p>
+            <p>Please wait until your name gets called, then head over to your respective window.</p>
+        </div>
+        <input type="submit" id="resultSubmit" class="body_btn" value="BACK TO START">
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-main">
+        <div class="footer-left">
+            <img src="assets/1003.jpg" alt="Bagong Pilipinas Logo" class="logo-1">
+            <img src="assets/1004.jpg" alt="TUV SUD Logo" class="logo-2">
+            <img src="assets/1005.jpg" alt="BOC Insignia" class="logo-3">
+        </div>
+        <div class="footer-right">
+            <p>VER 0.0</p>
+            <p>FOR ASSISTANCE, PLEASE CALL #### ### ####</p>
+        </div>
+    </div>
+</footer>
+
+<script src="Queueing.js"></script>
+</body>
+</html>

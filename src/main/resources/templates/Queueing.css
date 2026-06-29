@@ -1,0 +1,279 @@
+/* Visibility */
+.start {
+    display: block;
+}
+.priority {
+    display: none;
+}
+.category {
+    display: none;
+}
+.appoint {
+    display: none;
+}
+.name {
+    display: none;
+}
+.result {
+    display: none;
+}
+
+/* Header */
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header-left {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0 0 8px 0;
+}
+
+.header-text p,
+.htext-1,
+.htext-2,
+.htext-3 {
+    margin: 0;
+    padding: 0;
+}
+
+.header-text p {
+    margin: 0;
+    line-height: 1.1;
+}
+
+.htext-1 {
+    font-size: 12px;
+}
+
+.htext-2 {
+    font-size: 18px;
+}
+
+.header-hr {
+    margin: 0;
+    border: none;
+    border-top: 1px solid currentColor;
+    width: 100%;
+    height: 1px;
+}
+
+.htext-3 {
+    font-size: 20px;
+    margin-top: 0;
+}
+
+.hr-text {
+    margin-top: 0;
+    margin-bottom: 0;
+    border: none;
+    display: inline-block;
+    border-top: 1px;
+}
+
+.header-right {
+    margin: 0 0 6px 0;
+}
+
+.BoC-logo {
+    width: 60px;
+    height: auto;
+}
+
+
+/* Body */
+
+.body-main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    background: linear-gradient(to bottom, #0053A6 51%, #002040 100%);
+}
+
+.welcome-text {
+    text-align: center;
+    color: #E2C97E;
+    font-size: 96px;
+    margin-bottom: -120px;
+}
+
+.kiosk-text {
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    margin-bottom: 50px;
+}
+
+.start-button {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.body_btn {
+    background-color: #E2C97E;
+    color: #002040;
+    border: none;
+    border-radius: 5px;
+    padding: 24px 36px;
+    width: 200px;
+}
+
+.body-hr {
+    background-color:#E2C97E;
+    height: 2px;
+    border-radius: 0;
+    border: none;
+    clip-path: polygon(0% 50%, 15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%);
+}
+
+/* Category screen */
+.category .body-main {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+}
+
+.category .body-main .welcome-text {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.category .body-main input[type="button"] {
+    flex: 0 1 220px;
+    max-width: 220px;
+    margin: 0;
+}
+
+/* Appointment screen */
+
+.appoint .body-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+}
+
+.appoint .welcome-text {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.appoint label {
+    width: min(700px, 90vw);
+}
+
+.appoint select {
+    width: 100%;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 22px;
+    color: #002040;
+    background-color: #ffffff;
+}
+
+.appoint #appointSubmit {
+    width: 220px;
+    margin-top: 10px;
+}
+
+/* Name screen */
+
+.name .body-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 20px;
+}
+
+.name label {
+    color: #E2C97E;
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.name input[type="text"] {
+    width: min(500px, 80vw);
+    padding: 18px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 22px;
+    color: #002040;
+    background-color: #ffffff;
+}
+
+.name input[type="submit"] {
+    width: 220px;
+    margin-top: 10px;
+}
+
+/* Footer */
+
+.footer-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-left {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.footer-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0 0 8px 0;
+}
+
+.footer-text p {
+    margin: 0;
+}
+
+.footer-right {
+    margin: 0 0 6px 0;
+}
+
+.logo-1 {
+    width: 60px;
+    height: auto;
+}
+
+.logo-2 {
+    width: 60px;
+    height: auto;
+}
+
+.logo-3 {
+    width: auto;
+    height: 60px;
+}
