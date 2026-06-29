@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Table(name = "queue")
 public class Queue {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "queueSequence")
+    @SequenceGenerator(name = "queueSequence", sequenceName = "\"QUEUE_queue_id_seq\"", allocationSize = 1)
     private Integer queueId;
 
     private Integer windowId;
