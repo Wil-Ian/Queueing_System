@@ -1,8 +1,10 @@
 // init as global var
 let selectedStatus = "";
 let selectedCategory = "";
+let currentScreen = "startScreen";
+let screenHistory = [];
 
-function showScreen(screenId) {
+function showScreen(screenId, addToHistory = true) {
     const screens = [
         "startScreen",
         "priorityScreen",
@@ -11,12 +13,47 @@ function showScreen(screenId) {
         "nameScreen",
         "resultScreen"];
 
+    if (addToHistory && currentScreen !== screenId) {
+        screenHistory.push(currentScreen);
+    }
+
+    currentScreen = screenId;
+
     screens.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            element.style.display = id === screenId ? "block" : "none";
+            element.classList.toggle("active", id === screenId);
         }
     });
+}
+
+function goBack() {
+    const previousScreen = screenHistory.pop() || "startScreen";
+    showScreen(previousScreen, false);
+}
+
+function setLoading(isLoading) {
+    const overlay = document.getElementById("loadingOverlay");
+    if (overlay) {
+        overlay.classList.toggle("active", isLoading);
+    }
+}
+
+function resetFlow() {
+    selectedStatus = "";
+    selectedCategory = "";
+    screenHistory = [];
+    currentScreen = "startScreen";
+
+    const nameInput = document.getElementById("nameInput");
+    if (nameInput) {
+        nameInput.value = "";
+    }
+
+    const officeSelect = document.getElementById("officeSelect");
+    if (officeSelect) {
+        officeSelect.selectedIndex = 0;
+    }
 }
 
 // hide start, show priority
@@ -53,14 +90,22 @@ document.getElementById("appointSubmit")?.addEventListener("click", function() {
     showScreen("nameScreen");
 });
 
+// back button handlers
+document.querySelectorAll(".back_btn").forEach(button => {
+    button.addEventListener("click", goBack);
+});
+
 // return to start from result
 document.getElementById("resultSubmit")?.addEventListener("click", function() {
-    showScreen("startScreen");
+    resetFlow();
+    showScreen("startScreen", false);
 });
 
 // fetch window
 document.getElementById("nameSubmit").addEventListener("click", function() {
     const personName = document.getElementById("nameInput").value.trim();
+
+    setLoading(true);
 
     fetch("https://localhost:8443/window")
         .then(response => response.json())
@@ -93,10 +138,12 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 });
         })
         .then(() => {
+            setLoading(false);
             showScreen("resultScreen");
         })
         .catch(error => {
             console.error("Queue submission failed:", error);
+            setLoading(false);
             showScreen("resultScreen");
         });
 });
