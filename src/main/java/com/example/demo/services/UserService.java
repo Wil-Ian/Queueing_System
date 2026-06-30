@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.User;
 import com.example.demo.repositories.UserRepository;
@@ -26,6 +27,10 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        boolean existActiveUser = userRepository.existsByNameAndIsActiveTrue(user.getName());
+        if(existActiveUser) {
+            throw new InvalidOperationException("Duplicate name already in queue.", "DUPLICATE_NAME");
+        }
         user.setTimeStamp(LocalDateTime.now());
         user.setActive(true);
         return userRepository.save(user);
