@@ -17,7 +17,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Map<String, String> handleOperationInvalid(InvalidOperationException ex) {
-        return Map.of("error", ex.getMessage());
+        return Map.of("error", ex.getMessage(), "code", ex.getCode());
+
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
