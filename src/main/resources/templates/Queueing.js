@@ -121,7 +121,16 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                     priority: selectedStatus
                 })
             })
-                .then(response => response.json())
+                .then(response => {
+                    return response.json().then(body => {
+                        if (!response.ok) {
+                            const err = new Error(body.error);
+                            err.code = body.code;
+                            throw err;
+                        }
+                        return body;
+                    });
+                })
                 .then(createdUser => {
                     return fetch("https://localhost:8443/queue", {
                         method: "POST",
@@ -143,8 +152,15 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
         })
         .catch(error => {
             console.error("Queue submission failed:", error);
-            setLoading(false);
-            showScreen("resultScreen");
+            if(error.code === "DUPLICATE_NAME") {
+                alert("Duplicate name already in queue.")
+                setLoading(false);
+                showScreen("nameScreen");
+            } else {
+                setLoading(false);
+                showScreen("resultScreen");
+            }
+
         });
 });
 
