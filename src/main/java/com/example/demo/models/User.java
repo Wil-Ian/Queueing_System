@@ -14,8 +14,6 @@ public class User {
 
     private String name;
 
-    @Column(name = "queue_id")
-    private Integer queueId;
     private String priority;
 
     @Column(name = "time_stamp")
@@ -38,14 +36,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getQueueId() {
-        return queueId;
-    }
-
-    public void setQueueId(Integer queueId) {
-        this.queueId = queueId;
     }
 
     public String getPriority() {
