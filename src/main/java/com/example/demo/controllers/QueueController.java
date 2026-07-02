@@ -1,13 +1,13 @@
 package com.example.demo.controllers;
 
-
 import com.example.demo.models.Queue;
 import com.example.demo.services.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+import java.util.Optional;
 @RestController
 @RequestMapping("/queue")
 public class QueueController {
@@ -24,24 +24,35 @@ public class QueueController {
         return queueService.getAllQueues();
     }
 
+    @GetMapping("/window-queue")
+    public List<Queue> getWindowQueue(@RequestParam Integer windowId) {
+        return queueService.getWindowQueue(windowId);
+    }
+
     @GetMapping("/reports/daily-volume")
-    public Long getDailyVolume() {
-        return queueService.getDailyVolume();
+    public Long getDailyVolume(@RequestParam Integer windowId) {
+        return queueService.getDailyVolume(windowId);
+    }
+
+    @GetMapping("/live-status")
+    public ResponseEntity<Queue> getLiveStatus(@RequestParam Integer windowId) {
+        Optional<Queue> currentlyServing = queueService.getCurrentlyServing(windowId);
+        return currentlyServing.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @GetMapping("/reports/avg-waiting-time")
-    public Double getAvgWaitingTime() {
-        return queueService.getAvgWaitingTime();
+    public Double getAvgWaitingTime(@RequestParam Integer windowId) {
+        return queueService.getAvgWaitingTime(windowId);
     }
 
     @GetMapping("/reports/avg-service-time")
-    public Double getAvgServiceTime() {
-        return queueService.getAvgServiceTime();
+    public Double getAvgServiceTime(@RequestParam Integer windowId) {
+        return queueService.getAvgServiceTime(windowId);
     }
 
     @GetMapping("/reports/util-rate")
-    public Double getUtilizationRate() {
-        return queueService.getUtilizationRate();
+    public Double getUtilizationRate(@RequestParam Integer windowId) {
+        return queueService.getUtilizationRate(windowId);
     }
 
     @PostMapping
@@ -54,10 +65,13 @@ public class QueueController {
         return queueService.updateQueue(id, queue);
     }
 
+    @PutMapping("/{id}/requeue")
+    public Queue requeueEntry(@PathVariable Integer id) {
+        return queueService.requeueEntry(id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteQueue(@PathVariable Integer id) {
         queueService.deleteQueue(id);
     }
 }
-
-
