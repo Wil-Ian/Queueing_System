@@ -13,7 +13,7 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     List<Queue> findByIsActiveTrue();
     List<Queue> findByIsActiveTrueAndWindowId(Integer windowId);
 
-    Optional<Queue> findByIsActiveTrueAndWindowIdAndStatusServing(Integer windowId);
+    Optional<Queue> findByIsActiveTrueAndWindowIdAndStatus(Integer windowId, String status);
 
     @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(completed_at) = CURRENT_DATE AND status = 'COMPLETED'", nativeQuery = true)
     Long countCompletedToday(@Param("windowId") Integer windowId);
