@@ -30,7 +30,7 @@ public class QueueService {
     }
 
     public Optional<Queue> getCurrentlyServing(Integer windowId) {
-        return queueRepository.findByIsActiveTrueAndWindowIdAndStatusServing(windowId);
+        return queueRepository.findByIsActiveTrueAndWindowIdAndStatus(windowId, "SERVING");
     }
 
     public Queue createQueue(Queue queue) {
