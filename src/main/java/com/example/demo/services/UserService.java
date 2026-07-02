@@ -42,7 +42,6 @@ public class UserService {
             User user = existingUser.get();
             user.setName(updatedUser.getName());
             user.setPriority(updatedUser.getPriority());
-            user.setQueueId(updatedUser.getQueueId());
             return userRepository.save(user);
         }
         throw new ResourceNotFoundException("User with ID " + id + " not found");
