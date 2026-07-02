@@ -53,4 +53,13 @@ public class EmployeeService {
             throw new ResourceNotFoundException("Employee with ID " + id + " not found");
         }
     }
+
+    public Employee getCurrentEmployee(String email) {
+        Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
+        if(existingEmployee.isPresent()) {
+            return existingEmployee.get();
+        } else {
+            throw new ResourceNotFoundException("Employee with email " + email + " not found");
+        }
+    }
 }
