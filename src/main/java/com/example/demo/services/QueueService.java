@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Queue;
 import com.example.demo.repositories.QueueRepository;
@@ -24,8 +25,17 @@ public class QueueService {
         return queueRepository.findByIsActiveTrue();
     }
 
+    public List<Queue> getWindowQueue(Integer windowId) {
+        return queueRepository.findByIsActiveTrueAndWindowId(windowId);
+    }
+
+    public Optional<Queue> getCurrentlyServing(Integer windowId) {
+        return queueRepository.findByIsActiveTrueAndWindowIdAndStatusServing(windowId);
+    }
+
     public Queue createQueue(Queue queue) {
         queue.setTimeStamp(LocalDateTime.now());
+        queue.setStatus("WAITING");
         return queueRepository.save(queue);
     }
 
@@ -40,6 +50,7 @@ public class QueueService {
             }
             if(updatedQueue.getStatus().equals("COMPLETED") || updatedQueue.getStatus().equals("NO_RESPONSE")) {
                 queue.setCompletedAt(LocalDateTime.now());
+                queue.setActive(false);
             }
             return queueRepository.save(queue);
         }
@@ -57,19 +68,33 @@ public class QueueService {
         }
     }
 
-    public Long getDailyVolume() {
-        return queueRepository.countCompletedToday();
+    public Long getDailyVolume(Integer windowId) {
+        return queueRepository.countCompletedToday(windowId);
     }
 
-    public Double getAvgWaitingTime() {
-        return queueRepository.avgWaitingTimeToday();
+    public Double getAvgWaitingTime(Integer windowId) {
+        return queueRepository.avgWaitingTimeToday(windowId);
     }
 
-    public Double getAvgServiceTime() {
-        return queueRepository.avgServiceTimeToday();
+    public Double getAvgServiceTime(Integer windowId) {
+        return queueRepository.avgServiceTimeToday(windowId);
     }
 
-    public Double getUtilizationRate() {
-        return queueRepository.utilizationRate();
+    public Double getUtilizationRate(Integer windowId) {
+        return queueRepository.utilizationRate(windowId);
+    }
+
+    public Queue requeueEntry(Integer id) {
+        Optional<Queue> existingQueue = queueRepository.findById(id);
+        if(existingQueue.isPresent()) {
+            Queue queue = existingQueue.get();
+            if(queue.getStatus().equals("WAITING")) {
+                queue.setTimeStamp(LocalDateTime.now());
+                return queueRepository.save(queue);
+            } else {
+                throw new InvalidOperationException("Error: Client does not have the status 'WAITING'");
+            }
+        }
+        throw new ResourceNotFoundException("Queue with ID " + id + " not found");
     }
 }
