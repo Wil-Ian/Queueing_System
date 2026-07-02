@@ -5,6 +5,7 @@
     <meta name="viewport" content="device-width, initial-scale=1.0" />
     <title>BOC - Dashboard for Receiving</title>
     <link rel="stylesheet" href="receivingDashboard.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=bar_chart" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
@@ -28,11 +29,82 @@
     <nav class="sidebar-nav">
         <!-- Primary Top Nav -->
         <ul class="nav-list primary-nav">
+            <!-- dashboard button -->
             <li class="nav-item">
-                <a href="" class=""></a>
+                <a href="#" class="nav-link">
+                    <span class="material-symbols-rounded">dashboard</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">Dashboard</a></li>
+                </ul>
             </li>
+
+            <!-- Reports/Stats -->
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="material-symbols-rounded">reports/stats</span>
+                    <span class="nav-label">Reports/Stats</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">Reports/Stats</a></li>
+                </ul>
+            </li>
+
+            <!-- History -->
+            <li class="item">
+                <a href="#" class="nav-link">
+                    <span class="material-symbols-rounded">history</span>
+                    <span class="nav-label">History</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">History</a></li>
+                </ul>
+            </li>
+
+            <!-- Change Username -->
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="material-symbols-rounded">change username</span>
+                    <span class="nav-label">Change Username</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">History</a></li>
+                </ul>
+            </li>
+
+            <!-- Change Password -->
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="material-symbols-rounded">change password</span>
+                    <span class="nav-label">Change Password</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">Change Password</a></li>
+                </ul>
+            </li>
+
+            <!-- Log Out -->
+            <li></li>
         </ul>
     </nav>
+</div>
+
+<!-- Body Main -->
+<div class="Body-Main">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Visited</th>
+                <th>Priority</th>
+                <th># of Misses</th>
+                <th>Modify User</th>
+            </tr>
+        </thead>
+        <tbody id="queueTable"></tbody>
+
+    </table>
 </div>
 
 
