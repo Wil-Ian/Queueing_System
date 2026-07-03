@@ -153,7 +153,7 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
         .catch(error => {
             console.error("Queue submission failed:", error);
             if(error.code === "DUPLICATE_NAME") {
-                alert("Duplicate name already in queue.")
+                alert("Duplicate name already in queue.");
                 setLoading(false);
                 showScreen("nameScreen");
             } else {
