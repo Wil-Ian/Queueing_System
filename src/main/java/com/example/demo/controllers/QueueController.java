@@ -55,6 +55,21 @@ public class QueueController {
         return queueService.getUtilizationRate(windowId);
     }
 
+    @GetMapping("/reports/queue-count")
+    public Long getCountInQueue(@RequestParam Integer windowId) {
+        return queueService.getCountInQueue(windowId);
+    }
+
+    @GetMapping("/reports/missed-count")
+    public Long getCountMissedToday(@RequestParam Integer windowId) {
+        return queueService.getCountMissedToday(windowId);
+    }
+
+    @GetMapping("/reports/transfer-count")
+    public Long getCountTransferredToday(@RequestParam Integer windowId) {
+        return queueService.getCountTransferredToday(windowId);
+    }
+
     @PostMapping
     public Queue createQueue(@RequestBody Queue queue) {
         return queueService.createQueue(queue);
