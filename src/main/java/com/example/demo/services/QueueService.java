@@ -84,6 +84,18 @@ public class QueueService {
         return queueRepository.utilizationRate(windowId);
     }
 
+    public Long getCountInQueue(Integer windowId) {
+        return queueRepository.countInQueue(windowId);
+    }
+
+    public Long getCountMissedToday(Integer windowId) {
+        return queueRepository.countMissedToday(windowId);
+    }
+
+    public Long getCountTransferredToday(Integer windowId) {
+        return queueRepository.countTransferredToday(windowId);
+    }
+
     public Queue requeueEntry(Integer id) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
