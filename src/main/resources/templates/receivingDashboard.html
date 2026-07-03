@@ -90,13 +90,41 @@
     </nav>
 </div>
 
+
+
 <!-- Body Main -->
 <div class="Body-Main">
+    <!-- Header -->
+    <div class="header-main">
+        <p id="windowTitle"></p>
+        <p id="employeeName"></p>
+    </div>
+
+    <section class="stat-container">
+        <div class="stat-card">
+            <div id="totalQueue"></div>
+            <div class="stat-label">People in Queue</div>
+        </div>
+        <div class="stat-card">
+            <div id="totalMissed"></div>
+            <div class="stat-label">Missed Queue</div>
+        </div>
+        <div class="stat-card">
+            <div id="totalComplete"></div>
+            <div class="stat-label">Total Completions</div>
+        </div>
+        <div class="stat-card">
+            <div id="totalReferred"></div>
+            <div class="stat-label">Total Referred/Transferred</div>
+        </div>
+    </section>
+
+    <!-- Table -->
     <table>
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Visited</th>
+                <th>Time</th>
                 <th>Priority</th>
                 <th># of Misses</th>
                 <th>Modify User</th>
@@ -105,6 +133,39 @@
         <tbody id="queueTable"></tbody>
 
     </table>
+
+    <!-- Bottom Section -->
+    <section class="bottom-section">
+
+        <!-- Left Side -->
+        <div class="left-side">
+            <div class="left-part top">
+                <div>Currently Serving: </div>
+                <div id="currentServing"></div>
+            </div>
+            <div class="left-part bottom">
+                <div class="stat-card">
+                    <div class="stat-label">Visited: </div>
+                    <div id="currentVisited"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Priority: </div>
+                    <div id="currentPriority"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Missed Calls: </div>
+                    <div id="currentMissed"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="right-side">
+            <input type="button" value="Transfer" id="transferBtn">
+            <input type="button" value="Complete" id="completeBtn">
+        </div>
+
+    </section>
 </div>
 
 
