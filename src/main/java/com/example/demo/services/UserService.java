@@ -6,6 +6,7 @@ import com.example.demo.models.User;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,15 +37,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User updateUser(Integer id, User updatedUser) {
-        Optional<User> existingUser = userRepository.findById(id);
-        if(existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setName(updatedUser.getName());
-            user.setPriority(updatedUser.getPriority());
-            return userRepository.save(user);
-        }
-        throw new ResourceNotFoundException("User with ID " + id + " not found");
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + id + " not found"));
+
+        user.setName(updatedUser.getName());
+        user.setPriority(updatedUser.getPriority());
+
+        return user;
     }
 
     public void deleteUser(Integer id) {
