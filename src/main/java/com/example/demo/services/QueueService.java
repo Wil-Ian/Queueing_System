@@ -96,6 +96,10 @@ public class QueueService {
         return queueRepository.countTransferredToday(windowId);
     }
 
+    public Optional<Queue> priorityQueue(Integer windowId) {
+        return queueRepository.priorityQueue(windowId);
+    }
+
     public Queue requeueEntry(Integer id) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
