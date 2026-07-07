@@ -11,17 +11,17 @@
 <body>
 <!-- Sidebar -->
 <div class="body-sidebar">
-    <button class="menu-button"> <!-- sidebar-menu-button" -->
+    <button class="sidebar-menu-button"> <!-- sidebar-menu-button" -->
         <span class="material-symbols-rounded">menu</span>
     </button>
 
-    <aside class="sidebar"></aside>
+    <aside class="sidebar">
     <!-- Sidebar Header -->
     <header class="sidebar-header">
         <a href="" class="BoC-logo"> <!-- header-logo -->
             <img src="assets/1002.jpg" alt="BOC Logo" />
         </a>
-        <button class="sidebar-toggle">
+        <button class="sidebar-toggler">
             <span class="material-symbols-rounded">chevron_left</span>
         </button>
     </header>
@@ -52,8 +52,8 @@
             </li>
 
             <!-- History -->
-            <li class="item">
-                <a href="#" class="nav-link">
+            <li class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle">
                     <span class="material-symbols-rounded">history</span>
                     <span class="nav-label">History</span>
                 </a>
@@ -64,7 +64,7 @@
 
             <!-- Change Username -->
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link dropdown-toggle">
                     <span class="material-symbols-rounded">change username</span>
                     <span class="nav-label">Change Username</span>
                 </a>
@@ -75,7 +75,7 @@
 
             <!-- Change Password -->
             <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link dropdown-toggle">
                     <span class="material-symbols-rounded">change password</span>
                     <span class="nav-label">Change Password</span>
                 </a>
@@ -85,9 +85,18 @@
             </li>
 
             <!-- Log Out -->
-            <li></li>
+            <li class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle" onclick="logout()">
+                    <span class="material-symbols-rounded">logout</span>
+                    <span class="nav-label">Log-out</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="nav-item"><a class="nav-link dropdown-title">Log-out</a></li>
+                </ul>
+            </li>
         </ul>
     </nav>
+    </aside>
 </div>
 
 
@@ -161,13 +170,24 @@
 
         <!-- Right Side -->
         <div class="right-side">
-            <input type="button" value="Transfer" id="transferBtn">
-            <input type="button" value="Complete" id="completeBtn">
+            <input type="button" value="Transfer" id="transferBtn" onclick="openTransferModal()">
+            <input type="button" value="Complete" id="completeBtn" onclick="completeUser(currentServingId)">
+            <input type="button" value="Next" id="nextBtn" onclick="nextUser()">
         </div>
-
     </section>
+
+    <!-- Modal -->
+    <div id="transferModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Which window will you send your current client to?</p>
+            <input type="button" value="Evaluation: Operation" id="operationBtn">
+            <input type="button" value="Evaluation: Assessment" id="assessBtn">
+        </div>
+    </div>
 </div>
 
-
+<script src="receivingDashboard.js"></script>
 </body>
 </html>
