@@ -40,6 +40,12 @@ public class QueueController {
         return currentlyServing.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 
+    @GetMapping("/next-person")
+    public ResponseEntity<Queue> getNextPerson(@RequestParam Integer windowId) {
+        Optional<Queue> priorityQueue = queueService.priorityQueue(windowId);
+        return priorityQueue.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
     @GetMapping("/reports/avg-waiting-time")
     public Double getAvgWaitingTime(@RequestParam Integer windowId) {
         return queueService.getAvgWaitingTime(windowId);
