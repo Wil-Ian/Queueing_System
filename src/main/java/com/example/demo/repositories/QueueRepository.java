@@ -35,4 +35,7 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
 
     @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(time_stamp) = CURRENT_DATE AND status = 'TRANSFERRED'", nativeQuery = true)
     Long countTransferredToday(@Param("windowId") Integer windowId);
+
+    @Query(value = "SELECT q.* FROM queue q JOIN users u ON q.user_id = u.user_id WHERE window_id = :windowId AND status IN ('WAITING', 'TRANSFERRED') ORDER BY priority ASC, time_stamp ASC LIMIT 1", nativeQuery = true)
+    Optional<Queue> priorityQueue(@Param("windowId") Integer windowId);
 }
