@@ -34,6 +34,10 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/*.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/*.css").permitAll()
+                .requestMatchers(HttpMethod.GET, "/*.js").permitAll()
+                .requestMatchers(HttpMethod.GET, "/assets/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/window").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/queue").permitAll()
