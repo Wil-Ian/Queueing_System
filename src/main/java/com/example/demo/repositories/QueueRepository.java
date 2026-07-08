@@ -11,7 +11,7 @@ import java.util.Optional;
 // The type after the model is the primary key
 public interface QueueRepository extends JpaRepository<Queue, Integer> {
     List<Queue> findByIsActiveTrue();
-    List<Queue> findByIsActiveTrueAndWindowId(Integer windowId);
+    List<Queue> findByIsActiveTrueAndWindowIdOrderByUserPriorityAscTimeStampAsc(Integer windowId);
 
     Optional<Queue> findByIsActiveTrueAndWindowIdAndStatus(Integer windowId, String status);
 
@@ -30,12 +30,15 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND status IN ('WAITING', 'TRANSFERRED')", nativeQuery = true)
     Long countInQueue(@Param("windowId") Integer windowId);
 
-    @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(completed_at) = CURRENT_DATE AND status = 'NO_RESPONSE'", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(time_stamp) = CURRENT_DATE AND call_count >= 2", nativeQuery = true)
     Long countMissedToday(@Param("windowId") Integer windowId);
 
-    @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(time_stamp) = CURRENT_DATE AND status = 'TRANSFERRED'", nativeQuery = true)
-    Long countTransferredToday(@Param("windowId") Integer windowId);
+    @Query(value = "SELECT COUNT(*) FROM queue WHERE transferred_from = :transferredFrom AND DATE(time_stamp) = CURRENT_DATE AND status = 'TRANSFERRED'", nativeQuery = true)
+    Long countTransferredToday(@Param("transferredFrom") Integer transferredFrom);
 
     @Query(value = "SELECT q.* FROM queue q JOIN users u ON q.user_id = u.user_id WHERE window_id = :windowId AND status IN ('WAITING', 'TRANSFERRED') ORDER BY priority ASC, time_stamp ASC LIMIT 1", nativeQuery = true)
     Optional<Queue> priorityQueue(@Param("windowId") Integer windowId);
+
+    @Query(value = "SELECT * FROM queue WHERE window_id = :windowId AND status IN ('COMPLETED', 'TRANSFERRED', 'NO_RESPONSE') ORDER BY time_stamp DESC", nativeQuery = true)
+    List<Queue> finishedQueue(@Param("windowId") Integer windowId);
 }
