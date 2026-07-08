@@ -29,6 +29,11 @@ public class QueueController {
         return queueService.getWindowQueue(windowId);
     }
 
+    @GetMapping("/finished-queue")
+    public List<Queue> finishedQueue(@RequestParam Integer windowId) {
+        return queueService.finishedQueue(windowId);
+    }
+
     @GetMapping("/reports/daily-volume")
     public Long getDailyVolume(@RequestParam Integer windowId) {
         return queueService.getDailyVolume(windowId);
@@ -72,8 +77,8 @@ public class QueueController {
     }
 
     @GetMapping("/reports/transfer-count")
-    public Long getCountTransferredToday(@RequestParam Integer windowId) {
-        return queueService.getCountTransferredToday(windowId);
+    public Long getCountTransferredToday(@RequestParam Integer transferredFrom) {
+        return queueService.getCountTransferredToday(transferredFrom);
     }
 
     @PostMapping
