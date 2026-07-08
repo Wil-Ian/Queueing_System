@@ -1,6 +1,8 @@
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUB0ZXN0LmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImp0aSI6IjBlZmM5N2ViLWY5ZTAtNDE1ZS1hM2Y1LWU5MTJiZmMzNjljMSIsImlhdCI6MTc4MzMyNjEzNSwiZXhwIjoxNzgzMzI5NzM1fQ.KxiIZG6K-QD9_dZX61N4o-6fcvsx9AufbynQrpkLXpE";
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUB0ZXN0LmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImp0aSI6IjQ3MmZhZjBlLTVkYzAtNDM2OS04YjI0LTJlMTZhMTgwNTdiZSIsImlhdCI6MTc4MzQ2OTkwOSwiZXhwIjoxNzgzNDczNTA5fQ.qzl7kTTMLV_1_ikdmExA5XUNWfHxAe1UqIhne-__4Zc";
 let currentServingId = null;
 let currentWindowId = null;
+let missedCount = null;
+let dailyVolume = null;
 
 function loadDashboard() {
     fetch("https://localhost:8443/employee/me", {
@@ -52,7 +54,7 @@ function loadDashboard() {
                         "Content-Type": "application/json"
                     }
                 }),
-                fetch(`https://localhost:8443/queue/reports/transfer-count?windowId=${windowId}`, {
+                fetch(`https://localhost:8443/queue/reports/transfer-count?transferredFrom=${windowId}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${token}`,
@@ -62,25 +64,30 @@ function loadDashboard() {
             ]).then(responses => {
                 return Promise.all(responses.map(response => response.json()));
             })
-                .then(([queues, queueCount, missedCount, dailyVolume, transferCount]) => {
+                .then(([queues, queueCount, fetchedMissedCount, fetchedDailyVolume, transferCount]) => {
                     const queueTable = document.getElementById("queueTable");
                     const totalQueue = document.getElementById("totalQueue");
                     const totalMissed = document.getElementById("totalMissed");
                     const totalComplete = document.getElementById("totalComplete");
                     const totalReferred = document.getElementById("totalReferred");
+                    missedCount = fetchedMissedCount;
+                    dailyVolume = fetchedDailyVolume;
 
                     // queue table
                     if (queueTable) {
                         queueTable.innerHTML = "";
                         queues.forEach(queue => {
                             const row = document.createElement("tr");
+                            if (queue.user.priority === "PRIORITY") {
+                                row.classList.add("priority-row");
+                            }
                             row.innerHTML = `
                     <td>${queue.user.name}</td>
                     <td>${queue.timeStamp}</td>
                     <td>${queue.user.priority}</td>
                     <td>${queue.callCount}</td>
                     <td>
-                        <input type="button" value="Modify User" onclick="requeueUser('${queue.queueId}')">
+                        <input type="button" value="Requeue User" onclick="requeueUser('${queue.queueId}')">
                     </td>
                     `;
                             queueTable.appendChild(row);
@@ -110,9 +117,15 @@ function loadDashboard() {
             })
                 .then(response => {
                     const currentServing = document.getElementById("currentServing");
+                    const currentVisited = document.getElementById("currentVisited");
+                    const currentPriority = document.getElementById("currentPriority");
+                    const currentMissed = document.getElementById("currentMissed");
                     if (response.status === 204) {
                         if (currentServing) {
                             currentServing.innerHTML = "No one being served.";
+                            currentVisited.innerHTML = "";
+                            currentPriority.innerHTML = "";
+                            currentMissed.innerHTML = "";
                         }
                     } else {
                         return response.json();
@@ -404,3 +417,109 @@ document.querySelectorAll(".sidebar-toggler, .sidebar-menu-button").forEach((but
 });
 // Collapse sidebar by default on small screens
 if (window.innerWidth <= 1024) document.querySelector(".sidebar").classList.add("collapsed");
+
+function loadAnalytics() {
+    const analyticsFetch = Promise.all([
+        fetch(`https://localhost:8443/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        }),
+        fetch(`https://localhost:8443/queue/reports/avg-service-time?windowId=${currentWindowId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+    ])
+        .then(responses => {
+            return Promise.all(responses.map(response => response.json()));
+        })
+        .then(([fetchedAvgWaiting, fetchedAvgService]) => {
+            const averageWaitingTimeToday = document.getElementById("averageWaitingTimeToday");
+            const averageServiceTimeToday = document.getElementById("averageServiceTimeToday");
+            const renegingRate = document.getElementById("renegingRate");
+            if (averageWaitingTimeToday) {
+                averageWaitingTimeToday.innerHTML = fetchedAvgWaiting.toFixed(2) + " Min";
+            }
+            if (averageServiceTimeToday) {
+                averageServiceTimeToday.innerHTML = fetchedAvgService.toFixed(2) + " Min";
+            }
+            if (renegingRate && (missedCount + dailyVolume) !== 0) {
+                renegingRate.innerHTML = ((missedCount / (missedCount + dailyVolume)) * 100).toFixed(2) + "%";
+            } else {
+                renegingRate.innerHTML = "No data available";
+            }
+        })
+        .catch(error => {
+            console.error("Failed to fetch analytics.", error);
+            alert("Failed to fetch analytics.");
+        })
+}
+
+function loadHistory() {
+    fetch(`https://localhost:8443/queue/finished-queue?windowId=${currentWindowId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(response => {
+            return response.json().then(body => {
+                if (!response.ok) {
+                    throw new Error(body);
+                }
+                return body;
+            });
+        })
+        .then(queues => {
+            const historyTable = document.getElementById("historyTable");
+            // queue table
+            if (historyTable) {
+                historyTable.innerHTML = "";
+                queues.forEach(queue => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                    <td>${queue.user.name}</td>
+                    <td>${queue.timeStamp}</td>
+                    <td>${queue.completedAt}</td>
+                    <td>${queue.user.priority}</td>
+                    <td>${queue.callCount}</td>
+                    <td>${queue.status}</td>
+                    <td>${queue.transferredFrom}</td>
+                    `;
+                    historyTable.appendChild(row)
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Failed to fetch history.", error);
+            alert("Failed to fetch history.");
+        })
+}
+
+function showAnalytics() {
+    document.getElementById("mainBody").style.display = "none";
+    document.getElementById("historyScreen").style.display = "none";
+    document.getElementById("analyticsScreen").style.display = "block";
+    loadAnalytics();
+}
+
+function showDashboard() {
+    document.getElementById("analyticsScreen").style.display = "none";
+    document.getElementById("historyScreen").style.display = "none";
+    document.getElementById("mainBody").style.display = "block";
+    loadDashboard();
+}
+
+function showHistory() {
+    document.getElementById("mainBody").style.display = "none";
+    document.getElementById("analyticsScreen").style.display = "none";
+    document.getElementById("historyScreen").style.display = "block";
+    loadHistory();
+}
