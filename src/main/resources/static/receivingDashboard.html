@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="device-width, initial-scale=1.0" />
+    <meta name="viewport" content="device-width, initial-scale=1.0"/>
     <title>BOC - Dashboard for Receiving</title>
-    <link rel="stylesheet" href="receivingDashboard.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=bar_chart" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="receivingDashboard.css"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=bar_chart"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"/>
 </head>
 <body>
 <!-- Sidebar -->
@@ -16,175 +18,226 @@
     </button>
 
     <aside class="sidebar">
-    <!-- Sidebar Header -->
-    <header class="sidebar-header">
-        <a href="" class="BoC-logo"> <!-- header-logo -->
-            <img src="assets/1002.jpg" alt="BOC Logo" />
-        </a>
-        <button class="sidebar-toggler">
-            <span class="material-symbols-rounded">chevron_left</span>
-        </button>
-    </header>
+        <!-- Sidebar Header -->
+        <header class="sidebar-header">
+            <a href="" class="BoC-logo"> <!-- header-logo -->
+                <img src="assets/1002.jpg" alt="BOC Logo"/>
+            </a>
+            <button class="sidebar-toggler">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+        </header>
 
-    <nav class="sidebar-nav">
-        <!-- Primary Top Nav -->
-        <ul class="nav-list primary-nav">
-            <!-- dashboard button -->
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <span class="material-symbols-rounded">dashboard</span>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">Dashboard</a></li>
-                </ul>
-            </li>
+        <nav class="sidebar-nav">
+            <!-- Primary Top Nav -->
+            <ul class="nav-list primary-nav">
+                <!-- dashboard button -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showDashboard()" id="dashboardBtn">
+                        <span class="material-symbols-rounded">dashboard</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Dashboard</a></li>
+                    </ul>
+                </li>
 
-            <!-- Reports/Stats -->
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <span class="material-symbols-rounded">reports/stats</span>
-                    <span class="nav-label">Reports/Stats</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">Reports/Stats</a></li>
-                </ul>
-            </li>
+                <!-- Stats -->
+                <li class="nav-item">
+                    <a href="#" onclick="showAnalytics()" class="nav-link" id="analyticsBtn">
+                        <span class="material-symbols-rounded">analytics</span>
+                        <span class="nav-label">Analytics</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Analytics</a></li>
+                    </ul>
+                </li>
 
-            <!-- History -->
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle">
-                    <span class="material-symbols-rounded">history</span>
-                    <span class="nav-label">History</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">History</a></li>
-                </ul>
-            </li>
+                <!-- History -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="showHistory()">
+                        <span class="material-symbols-rounded">history</span>
+                        <span class="nav-label">History</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">History</a></li>
+                    </ul>
+                </li>
 
-            <!-- Change Username -->
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle">
-                    <span class="material-symbols-rounded">change username</span>
-                    <span class="nav-label">Change Username</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">History</a></li>
-                </ul>
-            </li>
+                <!-- Change Username -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <span class="material-symbols-rounded">person</span>
+                        <span class="nav-label">Change Username</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Change Username</a></li>
+                    </ul>
+                </li>
 
-            <!-- Change Password -->
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle">
-                    <span class="material-symbols-rounded">change password</span>
-                    <span class="nav-label">Change Password</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">Change Password</a></li>
-                </ul>
-            </li>
+                <!-- Change Password -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link dropdown-toggle">
+                        <span class="material-symbols-rounded">Password</span>
+                        <span class="nav-label">Change Password</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Change Password</a></li>
+                    </ul>
+                </li>
 
-            <!-- Log Out -->
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle" onclick="logout()">
-                    <span class="material-symbols-rounded">logout</span>
-                    <span class="nav-label">Log-out</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="nav-item"><a class="nav-link dropdown-title">Log-out</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+                <!-- Log Out -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="logout()">
+                        <span class="material-symbols-rounded">logout</span>
+                        <span class="nav-label">Log-out</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Log-out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
     </aside>
 </div>
 
+<!-- Screen Main -->
+<div class="screen-stage">
+    <!-- Dashboard -->
+    <div class="Body-Main" id="mainBody">
+        <!-- Header -->
+        <div class="header-main">
+            <p id="windowTitle"></p>
+            <p id="employeeName"></p>
+        </div>
 
+        <!-- stat cards -->
+        <section class="stat-container">
+            <div class="stat-card">
+                <div id="totalQueue"></div>
+                <div class="stat-label">People in Queue</div>
+            </div>
+            <div class="stat-card">
+                <div id="totalMissed"></div>
+                <div class="stat-label">Missed Queue</div>
+            </div>
+            <div class="stat-card">
+                <div id="totalComplete"></div>
+                <div class="stat-label">Total Completions</div>
+            </div>
+            <div class="stat-card">
+                <div id="totalReferred"></div>
+                <div class="stat-label">Total Referred/Transferred</div>
+            </div>
+        </section>
 
-<!-- Body Main -->
-<div class="Body-Main">
-    <!-- Header -->
-    <div class="header-main">
-        <p id="windowTitle"></p>
-        <p id="employeeName"></p>
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Time</th>
+                    <th>Priority</th>
+                    <th># of Misses</th>
+                    <th>Modify User</th>
+                </tr>
+                </thead>
+                <tbody id="queueTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Bottom Section -->
+        <section class="bottom-section">
+
+            <!-- Left Side -->
+            <div class="left-side">
+                <div class="left-part top">
+                    <div id="serving-card">
+                        <div>Currently Serving:</div>
+                        <div id="currentServing"></div>
+                    </div>
+                </div>
+                <div class="left-part bottom">
+                    <div class="serving-card">
+                        <div class="serving-label">Visited:</div>
+                        <div id="currentVisited"></div>
+                    </div>
+                    <div class="serving-card">
+                        <div class="serving-label">Priority:</div>
+                        <div id="currentPriority"></div>
+                    </div>
+                    <div class="serving-card">
+                        <div class="serving-label">Missed Calls:</div>
+                        <div id="currentMissed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side -->
+            <div class="right-side">
+                <input type="button" value="Transfer" id="transferBtn" onclick="openTransferModal()">
+                <input type="button" value="Complete" id="completeBtn" onclick="completeUser(currentServingId)">
+                <input type="button" value="Next" id="nextBtn" onclick="nextUser()">
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div id="transferModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Which window will you send your current client to?</p>
+                <input type="button" value="Evaluation: Operation" id="operationBtn">
+                <input type="button" value="Evaluation: Assessment" id="assessBtn">
+            </div>
+        </div>
     </div>
 
-    <section class="stat-container">
-        <div class="stat-card">
-            <div id="totalQueue"></div>
-            <div class="stat-label">People in Queue</div>
-        </div>
-        <div class="stat-card">
-            <div id="totalMissed"></div>
-            <div class="stat-label">Missed Queue</div>
-        </div>
-        <div class="stat-card">
-            <div id="totalComplete"></div>
-            <div class="stat-label">Total Completions</div>
-        </div>
-        <div class="stat-card">
-            <div id="totalReferred"></div>
-            <div class="stat-label">Total Referred/Transferred</div>
-        </div>
-    </section>
+    <!-- Analytics -->
+    <div id="analyticsScreen">
+        <section class="stat-container">
+            <div class="stat-card">
+                <div id="averageWaitingTimeToday"></div>
+                <div class="stat-label">Average Waiting Time Today</div>
+            </div>
+            <div class="stat-card">
+                <div id="averageServiceTimeToday"></div>
+                <div class="stat-label">Average Service Time Today</div>
+            </div>
+            <div class="stat-card">
+                <div id="renegingRate"></div>
+                <div class="stat-label">Reneging Percentage</div>
+            </div>
+        </section>
+    </div>
 
-    <!-- Table -->
-    <table>
-        <thead>
+    <!-- History Screen -->
+    <div class="history-screen" id="historyScreen">
+        <table>
+            <thead>
             <tr>
                 <th>Name</th>
-                <th>Time</th>
+                <th>Entered</th>
+                <th>Completed At</th>
                 <th>Priority</th>
                 <th># of Misses</th>
-                <th>Modify User</th>
+                <th>Status</th>
+                <th>Transferred From Window Id</th>
             </tr>
-        </thead>
-        <tbody id="queueTable"></tbody>
+            </thead>
+            <tbody id="historyTable"></tbody>
+        </table>
+    </div>
 
-    </table>
-
-    <!-- Bottom Section -->
-    <section class="bottom-section">
-
-        <!-- Left Side -->
-        <div class="left-side">
-            <div class="left-part top">
-                <div>Currently Serving: </div>
-                <div id="currentServing"></div>
-            </div>
-            <div class="left-part bottom">
-                <div class="stat-card">
-                    <div class="stat-label">Visited: </div>
-                    <div id="currentVisited"></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Priority: </div>
-                    <div id="currentPriority"></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Missed Calls: </div>
-                    <div id="currentMissed"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Side -->
-        <div class="right-side">
-            <input type="button" value="Transfer" id="transferBtn" onclick="openTransferModal()">
-            <input type="button" value="Complete" id="completeBtn" onclick="completeUser(currentServingId)">
-            <input type="button" value="Next" id="nextBtn" onclick="nextUser()">
-        </div>
-    </section>
-
-    <!-- Modal -->
-    <div id="transferModal" class="modal">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <p>Which window will you send your current client to?</p>
-            <input type="button" value="Evaluation: Operation" id="operationBtn">
-            <input type="button" value="Evaluation: Assessment" id="assessBtn">
-        </div>
+    <!-- Change Username -->
+    <div id="changeUserScreen" class="change-user">
+        <div class="welcome-text">
+            <p>PLEASE ENTER A NAME/NICKNAME:</p>
+        </div><br>
+        <label for="nameInput">Enter nickname here...</label>
+        <input type="text" id="nameInput">
+        <input type="submit" id="nameSubmit" class="body_btn"><br>
     </div>
 </div>
 
