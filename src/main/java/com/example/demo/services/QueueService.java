@@ -26,7 +26,11 @@ public class QueueService {
     }
 
     public List<Queue> getWindowQueue(Integer windowId) {
-        return queueRepository.findByIsActiveTrueAndWindowId(windowId);
+        return queueRepository.findByIsActiveTrueAndWindowIdOrderByUserPriorityAscTimeStampAsc(windowId);
+    }
+
+    public List<Queue> finishedQueue(Integer windowId) {
+        return queueRepository.finishedQueue(windowId);
     }
 
     public Optional<Queue> getCurrentlyServing(Integer windowId) {
@@ -36,6 +40,7 @@ public class QueueService {
     public Queue createQueue(Queue queue) {
         queue.setTimeStamp(LocalDateTime.now());
         queue.setStatus("WAITING");
+        queue.setActive(true);
         return queueRepository.save(queue);
     }
 
@@ -43,8 +48,12 @@ public class QueueService {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
             Queue queue = existingQueue.get();
+            Integer originalWindowId = queue.getWindowId();
             queue.setWindowId(updatedQueue.getWindowId());
             queue.setStatus(updatedQueue.getStatus());
+            if(updatedQueue.getStatus().equals("TRANSFERRED")) {
+                queue.setTransferredFrom(originalWindowId);
+            }
             if(updatedQueue.getStatus().equals("SERVING")) {
                 queue.setServingStartedAt(LocalDateTime.now());
             }
@@ -92,8 +101,8 @@ public class QueueService {
         return queueRepository.countMissedToday(windowId);
     }
 
-    public Long getCountTransferredToday(Integer windowId) {
-        return queueRepository.countTransferredToday(windowId);
+    public Long getCountTransferredToday(Integer transferredFrom) {
+        return queueRepository.countTransferredToday(transferredFrom);
     }
 
     public Optional<Queue> priorityQueue(Integer windowId) {
@@ -104,7 +113,16 @@ public class QueueService {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
             Queue queue = existingQueue.get();
-            if(queue.getStatus().equals("WAITING")) {
+            if(queue.getStatus().equals("WAITING") || queue.getStatus().equals("SERVING")) {
+                if(queue.getCallCount() == null) {
+                    queue.setCallCount(0);
+                }
+                queue.setStatus("WAITING");
+                queue.setCallCount(queue.getCallCount() + 1);
+                if(queue.getCallCount() >= 2) {
+                    queue.setStatus("NO_RESPONSE");
+                    queue.setActive(false);
+                }
                 queue.setTimeStamp(LocalDateTime.now());
                 return queueRepository.save(queue);
             } else {
