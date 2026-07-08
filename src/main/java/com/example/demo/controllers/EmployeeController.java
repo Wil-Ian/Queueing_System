@@ -44,4 +44,9 @@ public class EmployeeController {
     public void deleteEmployee(@PathVariable Integer id) {
         employeeService.deleteEmployee(id);
     }
+
+    @PatchMapping("/{id}/name")
+    public Employee pathName(@PathVariable Integer id, @RequestBody String name) {
+        return employeeService.patchName(id, name);
+    }
 }
