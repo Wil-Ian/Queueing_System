@@ -34,6 +34,16 @@ public class QueueController {
         return queueService.finishedQueue(windowId);
     }
 
+    @GetMapping("/all-queue")
+    public List<Queue> findAllInQueue() {
+        return queueService.findAllInQueue();
+    }
+
+    @GetMapping("/all-serving")
+    public List<Queue> findAllServing() {
+        return queueService.findAllServing();
+    }
+
     @GetMapping("/reports/daily-volume")
     public Long getDailyVolume(@RequestParam Integer windowId) {
         return queueService.getDailyVolume(windowId);
