@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface QueueRepository extends JpaRepository<Queue, Integer> {
     List<Queue> findByIsActiveTrue();
     List<Queue> findByIsActiveTrueAndWindowIdOrderByUserPriorityAscTimeStampAsc(Integer windowId);
-
     Optional<Queue> findByIsActiveTrueAndWindowIdAndStatus(Integer windowId, String status);
 
     @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND DATE(completed_at) = CURRENT_DATE AND status = 'COMPLETED'", nativeQuery = true)
@@ -41,4 +40,10 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
 
     @Query(value = "SELECT * FROM queue WHERE window_id = :windowId AND status IN ('COMPLETED', 'TRANSFERRED', 'NO_RESPONSE') ORDER BY time_stamp DESC", nativeQuery = true)
     List<Queue> finishedQueue(@Param("windowId") Integer windowId);
+
+    @Query(value = "SELECT * FROM queue WHERE status IN ('WAITING', 'TRANSFERRED') AND is_active = true ORDER BY time_stamp ASC", nativeQuery = true)
+    List<Queue> findAllInQueue();
+
+    @Query(value = "SELECT * FROM queue WHERE status = 'SERVING' AND is_active = true ORDER BY time_stamp ASC", nativeQuery = true)
+    List<Queue> findAllServing();
 }
