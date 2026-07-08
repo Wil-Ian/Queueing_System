@@ -11,15 +11,25 @@ body {
     background: linear-gradient(#F1F3FF, #CBD4FF);
 }
 
-.Body-Main {
+.Body-Main,
+#analyticsScreen,
+.history-screen {
     margin-left: 270px;
     padding: 24px;
     min-height: 100vh;
-    transition: margin-left 0.4s ease;
+    transition: none;
 }
 
-.body-sidebar:has(.sidebar.collapsed) ~ .Body-Main {
+body.sidebar-collapsed .Body-Main,
+body.sidebar-collapsed #analyticsScreen,
+body.sidebar-collapsed .history-screen {
     margin-left: 85px;
+}
+
+body.content-animating .Body-Main,
+body.content-animating #analyticsScreen,
+body.content-animating .history-screen {
+    transition: margin-left 0.4s ease;
 }
 
 .stat-container {
@@ -79,20 +89,62 @@ body {
     top: 0;
     left: 0;
     z-index: 10;
-    width: 270px;
+    width: 320px;
     height: 100vh;
     background: #151A2D;
-    transition: all 0.4s ease;
+    transition: none;
 }
+body.sidebar-collapsed .sidebar,
 .sidebar.collapsed {
     width: 85px;
+}
+.sidebar.animating {
+    transition: width 0.4s ease;
 }
 .sidebar .sidebar-header {
     display: flex;
     position: relative;
-    padding: 25px 20px;
-    align-items: center;
+    padding: 20px 16px;
+    align-items: flex-start;
     justify-content: space-between;
+    gap: 10px;
+    min-height: 90px;
+}
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #EEF2FF;
+    min-width: 0;
+}
+.sidebar-brand-text .brand-line {
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-brand-text .brand-line-small {
+    font-size: 0.48rem;
+    letter-spacing: 0.02em;
+}
+.sidebar-brand-text .brand-line-main {
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+.sidebar-brand-text .brand-line-strong {
+    font-size: 0.56rem;
+    font-weight: 700;
+}
+.sidebar-brand-text .brand-divider {
+    border: 0;
+    border-top: 1px solid rgba(238, 242, 255, 0.7);
+    margin: 2px 0;
 }
 .sidebar-header .BoC-logo img {
     width: 46px;
@@ -104,7 +156,9 @@ body {
 .sidebar-header .sidebar-toggler,
 .sidebar-menu-button {
     position: absolute;
-    right: 20px;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     height: 35px;
     width: 35px;
     color: #151A2D;
@@ -115,15 +169,27 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    transition: 0.4s ease;
+    transition: none;
+    flex-shrink: 0;
+    z-index: 2;
+}
+.sidebar.animating .sidebar-header .sidebar-toggler,
+.sidebar.animating .sidebar-header .sidebar-toggler span,
+.sidebar.animating .sidebar-menu-button {
+    transition: all 0.4s ease;
 }
 .sidebar.collapsed .sidebar-header .sidebar-toggler {
-    transform: translate(-4px, 65px);
+    right: 20px;
+    top: 86px;
+    transform: translateY(0);
+}
+.sidebar.collapsed .sidebar-brand-text {
+    display: none;
 }
 .sidebar-header .sidebar-toggler span,
 .sidebar-menu-button span {
     font-size: 1.75rem;
-    transition: 0.4s ease;
+    transition: none;
 }
 .sidebar.collapsed .sidebar-header .sidebar-toggler span {
     transform: rotate(180deg);
@@ -505,4 +571,76 @@ tbody tr:nth-child(odd) {
 
 .body-sidebar:has(.sidebar.collapsed) ~ .screen-stage .history-screen {
     margin-left: 85px;
+}
+
+/* CHANGE USERNAME SCREEN */
+.change-user {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(21, 26, 45, 0.45);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 40px 20px 20px;
+}
+
+.change-user .modal-content {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    width: min(100%, 420px);
+    box-shadow: 0 16px 40px rgba(21, 26, 45, 0.22);
+    border: 1px solid rgba(21, 26, 45, 0.08);
+    text-align: center;
+}
+
+.change-user .modal-content p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #151A2D;
+    margin-bottom: 18px;
+}
+
+.change-user .modal-content input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.change-user .modal-content input[type="submit"] {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #151A2D, #2b3557);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.change-user .modal-content input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(21, 26, 45, 0.15);
+}
+
+.change-user .close-user-modal {
+    float: right;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.change-user .close-user-modal:hover {
+    color: #151A2D;
+}
+
+/* CHANGE PASSWORD */
+.change-pass {
+    display: none;
 }
