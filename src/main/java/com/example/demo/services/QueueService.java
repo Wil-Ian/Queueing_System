@@ -33,6 +33,14 @@ public class QueueService {
         return queueRepository.finishedQueue(windowId);
     }
 
+    public List<Queue> findAllInQueue() {
+        return queueRepository.findAllInQueue();
+    }
+
+    public List<Queue> findAllServing() {
+        return queueRepository.findAllServing();
+    }
+
     public Optional<Queue> getCurrentlyServing(Integer windowId) {
         return queueRepository.findByIsActiveTrueAndWindowIdAndStatus(windowId, "SERVING");
     }
