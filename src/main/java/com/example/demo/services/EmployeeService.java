@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.exceptions.InvalidCredentialsException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Employee;
 import com.example.demo.repositories.EmployeeRepository;
@@ -71,5 +72,21 @@ public class EmployeeService {
             return employeeRepository.save(employee);
         }
         throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+    }
+
+    public Employee patchEmployeePassword(Integer id, String password, String newPassword) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(id);
+        if(existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            if(passwordEncoder.matches(password, employee.getPassword())) {
+                String hashedPassword = passwordEncoder.encode(newPassword);
+                employee.setPassword(hashedPassword);
+                return employeeRepository.save(employee);
+            } else {
+                throw new InvalidCredentialsException("Password does not match.");
+            }
+        } else {
+            throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+        }
     }
 }
