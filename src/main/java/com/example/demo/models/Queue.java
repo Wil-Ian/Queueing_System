@@ -36,6 +36,9 @@ public class Queue {
     @Column(name = "serving_started_at")
     private LocalDateTime servingStartedAt;
 
+    @Column(name = "transferred_from")
+    private Integer transferredFrom;
+
     public Integer getQueueId() {
         return queueId;
     }
@@ -106,5 +109,13 @@ public class Queue {
 
     public void setServingStartedAt(LocalDateTime servingStartedAt) {
         this.servingStartedAt = servingStartedAt;
+    }
+
+    public Integer getTransferredFrom() {
+        return transferredFrom;
+    }
+
+    public void setTransferredFrom(Integer transferredFrom) {
+        this.transferredFrom = transferredFrom;
     }
 }
