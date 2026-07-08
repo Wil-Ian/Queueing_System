@@ -62,4 +62,14 @@ public class EmployeeService {
             throw new ResourceNotFoundException("Employee with email " + email + " not found");
         }
     }
+
+    public Employee patchName(Integer id, String name) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(id);
+        if(existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            employee.setName(name);
+            return employeeRepository.save(employee);
+        }
+        throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+    }
 }
