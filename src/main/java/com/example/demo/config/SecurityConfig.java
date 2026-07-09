@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/*.js").permitAll()
                 .requestMatchers(HttpMethod.GET, "/assets/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/window").permitAll()
+                .requestMatchers(HttpMethod.GET, "/queue/all-queue").permitAll()
+                .requestMatchers(HttpMethod.GET, "/queue/all-serving").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/queue").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
