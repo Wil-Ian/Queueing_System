@@ -10,7 +10,7 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"/>
 </head>
-<body>
+<body class="sidebar-collapsed">
 <!-- Sidebar -->
 <div class="body-sidebar">
     <button class="sidebar-menu-button"> <!-- sidebar-menu-button" -->
@@ -20,9 +20,17 @@
     <aside class="sidebar">
         <!-- Sidebar Header -->
         <header class="sidebar-header">
-            <a href="" class="BoC-logo"> <!-- header-logo -->
-                <img src="assets/1002.jpg" alt="BOC Logo"/>
-            </a>
+            <div class="sidebar-brand">
+                <a href="" class="BoC-logo"> <!-- header-logo -->
+                    <img src="assets/1002.jpg" alt="BOC Logo"/>
+                </a>
+                <div class="sidebar-brand-text">
+                    <p class="brand-line brand-line-small">REPUBLIC OF THE PHILIPPINES</p>
+                    <p class="brand-line brand-line-main">BUREAU OF CUSTOMS</p>
+                    <hr class="brand-divider">
+                    <p class="brand-line brand-line-strong">PORT OF CLARK INTERNATIONAL AIRPORT</p>
+                </div>
+            </div>
             <button class="sidebar-toggler">
                 <span class="material-symbols-rounded">chevron_left</span>
             </button>
@@ -66,7 +74,7 @@
 
                 <!-- Change Username -->
                 <li class="nav-item">
-                    <a href="#" class="nav-link dropdown-toggle">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="showChangeUserModal()">
                         <span class="material-symbols-rounded">person</span>
                         <span class="nav-label">Change Username</span>
                     </a>
@@ -77,7 +85,7 @@
 
                 <!-- Change Password -->
                 <li class="nav-item">
-                    <a href="#" class="nav-link dropdown-toggle">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="showChangePassModal()">
                         <span class="material-symbols-rounded">Password</span>
                         <span class="nav-label">Change Password</span>
                     </a>
@@ -231,13 +239,33 @@
     </div>
 
     <!-- Change Username -->
-    <div id="changeUserScreen" class="change-user">
-        <div class="welcome-text">
-            <p>PLEASE ENTER A NAME/NICKNAME:</p>
-        </div><br>
-        <label for="nameInput">Enter nickname here...</label>
-        <input type="text" id="nameInput">
-        <input type="submit" id="nameSubmit" class="body_btn"><br>
+    <div id="changeUserModal" class="change-user">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="closeUser" class="close-user-modal">&times;</span>
+            <p>Please Enter A New Username: </p>
+            <label for="userNameInput">Enter username here...</label>
+            <input type="text" id="userNameInput">
+            <input type="submit" id="userNameSubmit" class="body-btn" onclick="changeUsername()"><br>
+        </div>
+    </div>
+
+    <!-- Change Password -->
+    <div id="changePassModal" class="change-pass">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="closePass" class="close-pass-modal">&times;</span>
+            <p>Please Enter Current Password: </p>
+            <label for="passInput">Enter current password here...</label>
+            <input type="password" id="passInput"><br>
+            <p>Please Enter New Password: </p>
+            <label for="newPassInput">Enter new password here...: </label>
+            <input type="password" id="newPassInput">
+            <p>Confirm New Password: </p>
+            <label for="confirmPassInput">Re-enter new password here...: </label>
+            <input type="password" id="confirmPassInput">
+            <input type="submit" id="passSubmit" class="body-btn" onclick="changePassword()"><br>
+        </div>
     </div>
 </div>
 
