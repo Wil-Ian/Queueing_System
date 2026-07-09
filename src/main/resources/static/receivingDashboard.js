@@ -1,6 +1,7 @@
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUB0ZXN0LmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImp0aSI6IjQ3MmZhZjBlLTVkYzAtNDM2OS04YjI0LTJlMTZhMTgwNTdiZSIsImlhdCI6MTc4MzQ2OTkwOSwiZXhwIjoxNzgzNDczNTA5fQ.qzl7kTTMLV_1_ikdmExA5XUNWfHxAe1UqIhne-__4Zc";
+const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUB0ZXN0LmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImp0aSI6IjU3OWM0NTg3LTE4NjItNGMwMi05ZjY1LTJkNjc5ZmJhMDQ4NiIsImlhdCI6MTc4MzQ4Njg4NCwiZXhwIjoxNzgzNDkwNDg0fQ.EYjcccpX2HpyJQ5DtpThag_odsnX6OPasw-jf507whM";
 let currentServingId = null;
 let currentWindowId = null;
+let currentEmployeeId = null;
 let missedCount = null;
 let dailyVolume = null;
 
@@ -15,6 +16,7 @@ function loadDashboard() {
         .then(employee => {
             const windowId = employee.window.windowId;
             currentWindowId = windowId;
+            currentEmployeeId = employee.employeeId;
             const employeeName = document.getElementById("employeeName");
             const windowTitle = document.getElementById("windowTitle");
 
@@ -167,15 +169,33 @@ setInterval(loadDashboard, 5000);
 
 function setupEventListeners() {
     const transferModal = document.getElementById("transferModal");
+    const changeUserModal = document.getElementById("changeUserModal");
+    const changePassModal = document.getElementById("changePassModal");
     const close = document.getElementsByClassName("close")[0];
+    const closeUser = document.getElementById("closeUser");
+    const closePass = document.getElementById("closePass");
 
     close.onclick = function() {
         transferModal.style.display = "none";
     }
 
+    closeUser.onclick = function () {
+        changeUserModal.style.display = "none";
+    }
+
+    closePass.onclick = function() {
+        changePassModal.style.display = "none";
+    }
+
     window.onclick = function(event) {
+        if (event.target === changeUserModal) {
+            changeUserModal.style.display = "none";
+        }
         if (event.target === transferModal) {
             transferModal.style.display = "none";
+        }
+        if (event.target === changePassModal) {
+            changePassModal.style.display = "none";
         }
     }
 }
@@ -408,15 +428,46 @@ document.querySelectorAll(".dropdown-toggle").forEach((dropdownToggle) => {
         toggleDropdown(dropdown, menu, !isOpen); // Toggle current dropdown visibility
     });
 });
+const applySidebarState = () => {
+    const sidebar = document.querySelector(".sidebar");
+    const isCollapsed = sidebar?.classList.contains("collapsed") ?? false;
+    document.body.classList.toggle("sidebar-collapsed", isCollapsed);
+};
+
 // Attach click event to sidebar toggle buttons
 document.querySelectorAll(".sidebar-toggler, .sidebar-menu-button").forEach((button) => {
     button.addEventListener("click", () => {
         closeAllDropdowns(); // Close all open dropdowns
-        document.querySelector(".sidebar").classList.toggle("collapsed"); // Toggle collapsed class on sidebar
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar) {
+            sidebar.classList.add("animating");
+            document.body.classList.add("content-animating");
+            sidebar.classList.toggle("collapsed");
+            applySidebarState();
+            window.setTimeout(() => {
+                sidebar.classList.remove("animating");
+                document.body.classList.remove("content-animating");
+            }, 400);
+        }
     });
 });
-// Collapse sidebar by default on small screens
-if (window.innerWidth <= 1024) document.querySelector(".sidebar").classList.add("collapsed");
+
+// Collapse sidebar by default
+const sidebar = document.querySelector(".sidebar");
+if (sidebar) {
+    sidebar.classList.add("collapsed");
+}
+applySidebarState();
+
+window.addEventListener("resize", () => {
+    if (!sidebar) return;
+    if (window.innerWidth <= 1024) {
+        sidebar.classList.add("collapsed");
+    } else {
+        sidebar.classList.add("collapsed");
+    }
+    applySidebarState();
+});
 
 function loadAnalytics() {
     const analyticsFetch = Promise.all([
@@ -503,6 +554,72 @@ function loadHistory() {
         })
 }
 
+function changeUsername() {
+    const userNameInput = document.getElementById("userNameInput");
+    fetch(`https://localhost:8443/employee/${currentEmployeeId}/name`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userNameInput.value)
+    })
+        .then(response => {
+            return response.json().then(body => {
+                if (!response.ok) {
+                    throw new Error(body);
+                }
+                return body;
+            });
+        })
+        .then(success => {
+            alert("Name Changed Successfully.");
+            document.getElementById("changeUserModal").style.display = "none";
+        })
+        .catch(error => {
+            console.error("Error.", error);
+            alert("Error.");
+        })
+}
+
+function changePassword() {
+    const passInput = document.getElementById("passInput");
+    const newPassInput = document.getElementById("newPassInput");
+    const confirmPassInput = document.getElementById("confirmPassInput");
+
+    if(newPassInput.value === confirmPassInput.value) {
+        fetch(`https://localhost:8443/employee/${currentEmployeeId}/password`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                currentPassword: passInput.value,
+                newPassword: newPassInput.value
+            })
+        })
+            .then(response => {
+                return response.json().then(body => {
+                    if (!response.ok) {
+                        throw new Error(body);
+                    }
+                    return body;
+                });
+            })
+            .then(success => {
+                alert("Password Changed Successfully.");
+                document.getElementById("changePassModal").style.display = "none";
+            })
+            .catch(error => {
+                console.error("Error.", error);
+                alert("Error.");
+            })
+    } else {
+        alert("Passwords do not match.");
+    }
+}
+
 function showAnalytics() {
     document.getElementById("mainBody").style.display = "none";
     document.getElementById("historyScreen").style.display = "none";
@@ -522,4 +639,12 @@ function showHistory() {
     document.getElementById("analyticsScreen").style.display = "none";
     document.getElementById("historyScreen").style.display = "block";
     loadHistory();
+}
+
+function showChangeUserModal() {
+    document.getElementById("changeUserModal").style.display = "flex";
+}
+
+function showChangePassModal() {
+    document.getElementById("changePassModal").style.display = "block";
 }
