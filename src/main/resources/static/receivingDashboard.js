@@ -1,4 +1,4 @@
-const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbXBsb3llZUB0ZXN0LmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImp0aSI6IjU3OWM0NTg3LTE4NjItNGMwMi05ZjY1LTJkNjc5ZmJhMDQ4NiIsImlhdCI6MTc4MzQ4Njg4NCwiZXhwIjoxNzgzNDkwNDg0fQ.EYjcccpX2HpyJQ5DtpThag_odsnX6OPasw-jf507whM";
+const token = "";
 let currentServingId = null;
 let currentWindowId = null;
 let currentEmployeeId = null;
@@ -538,6 +538,7 @@ function loadHistory() {
                     row.innerHTML = `
                     <td>${queue.user.name}</td>
                     <td>${queue.timeStamp}</td>
+                    <td>${queue.servingStartedAt}</td>
                     <td>${queue.completedAt}</td>
                     <td>${queue.user.priority}</td>
                     <td>${queue.callCount}</td>
