@@ -14,6 +14,8 @@ public class User {
 
     private String name;
 
+    private String consignee;
+
     private String priority;
 
     @Column(name = "time_stamp")
@@ -61,5 +63,12 @@ public class User {
     public void setActive(Boolean active) {
         isActive = active;
     }
-}
 
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
+    }
+}
