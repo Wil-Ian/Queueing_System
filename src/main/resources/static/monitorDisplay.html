@@ -2,29 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Queue Monitor</title>
+    <link rel="stylesheet" href="monitorDisplay.css"/>
 </head>
 <body>
-<div class="left-side">
-    <!-- Left Table -->
-    <div class="table-wrapper">
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Window</th>
-            </tr>
-            </thead>
-            <tbody id="servingTable"></tbody>
-        </table>
-    </div>
-</div>
-<div class="right-side">
-    <!-- Right Table -->
-    <div class="table-container">
-    </div>
+    <header class="monitor-header">
+        <div class="header-brand">
+            <img src="assets/1002.jpg" alt="BOC Logo" class="brand-logo">
+            <div class="header-copy">
+                <p class="header-line-small">REPUBLIC OF THE PHILIPPINES</p>
+                <p class="header-line-large">BUREAU OF CUSTOMS</p>
+                <hr class="header-divider">
+                <p class="header-line-sub"><strong>PORT OF CLARK INTERNATIONAL AIRPORT</strong></p>
+            </div>
+        </div>
+        <div class="header-meta">
+            <p id="current_time">--:--:--</p>
+            <p id="current_date">Loading date...</p>
+            <div class="header-badge">QUEUE MONITOR</div>
+        </div>
+    </header>
 
+    <main class="dashboard-shell">
+        <section class="panel left-panel">
+            <div class="panel-header">
+                <h2>Currently Being Served</h2>
+                <p>Live service status</p>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Window</th>
+                    </tr>
+                    </thead>
+                    <tbody id="servingTable"></tbody>
+                </table>
+            </div>
+        </section>
 
-</div>
+        <section class="panel right-panel">
+            <div class="panel-header">
+                <h2>Window Queue Overview</h2>
+                <p>Upcoming customers per window</p>
+            </div>
+            <div class="queue-table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Priority</th>
+                    </tr>
+                    </thead>
+                    <tbody id="queueTable"></tbody>
+                </table>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Priority</th>
+                    </tr>
+                    </thead>
+                    <tbody id="queueTableTwo"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="monitorDisplay.js"></script>
 </body>
 </html>
