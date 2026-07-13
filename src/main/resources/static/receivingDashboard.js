@@ -21,10 +21,10 @@ function loadDashboard() {
             const windowTitle = document.getElementById("windowTitle");
 
             if (employeeName) {
-                employeeName.innerHTML = employee.name;
+                employeeName.innerHTML = escapeHtml(employee.name);
             }
             if (windowTitle) {
-                windowTitle.innerHTML = employee.window.category;
+                windowTitle.innerHTML = escapeHtml(employee.window.category);
             }
 
             const mainFetch = Promise.all([
@@ -84,10 +84,10 @@ function loadDashboard() {
                                 row.classList.add("priority-row");
                             }
                             row.innerHTML = `
-                    <td>${queue.user.name}</td>
-                    <td>${queue.timeStamp}</td>
-                    <td>${queue.user.priority}</td>
-                    <td>${queue.callCount}</td>
+                    <td>${escapeHtml(queue.user.name)}</td>
+                    <td>${escapeHtml(queue.timeStamp)}</td>
+                    <td>${escapeHtml(queue.user.priority)}</td>
+                    <td>${escapeHtml(queue.callCount)}</td>
                     <td>
                         <input type="button" value="Requeue User" onclick="requeueUser('${queue.queueId}')">
                     </td>
@@ -141,16 +141,16 @@ function loadDashboard() {
                         const currentMissed = document.getElementById("currentMissed");
                         currentServingId = queue.queueId;
                         if (currentServing) {
-                            currentServing.innerHTML = queue.user.name;
+                            currentServing.innerHTML = escapeHtml(queue.user.name);
                         }
                         if (currentVisited) {
-                            currentVisited.innerHTML = queue.timeStamp;
+                            currentVisited.innerHTML = escapeHtml(queue.timeStamp);
                         }
                         if (currentPriority) {
-                            currentPriority.innerHTML = queue.user.priority;
+                            currentPriority.innerHTML = escapeHtml(queue.user.priority);
                         }
                         if (currentMissed) {
-                            currentMissed.innerHTML = queue.callCount;
+                            currentMissed.innerHTML = escapeHtml(queue.callCount);
                         }
                     }
                 })
@@ -536,14 +536,14 @@ function loadHistory() {
                     const row = document.createElement("tr");
 
                     row.innerHTML = `
-                    <td>${queue.user.name}</td>
-                    <td>${queue.timeStamp}</td>
-                    <td>${queue.servingStartedAt}</td>
-                    <td>${queue.completedAt}</td>
-                    <td>${queue.user.priority}</td>
-                    <td>${queue.callCount}</td>
-                    <td>${queue.status}</td>
-                    <td>${queue.transferredFrom}</td>
+                    <td>${escapeHtml(queue.user.name)}</td>
+                    <td>${escapeHtml(queue.timeStamp)}</td>
+                    <td>${escapeHtml(queue.servingStartedAt)}</td>
+                    <td>${escapeHtml(queue.completedAt)}</td>
+                    <td>${escapeHtml(queue.user.priority)}</td>
+                    <td>${escapeHtml(queue.callCount)}</td>
+                    <td>${escapeHtml(queue.status)}</td>
+                    <td>${escapeHtml(queue.transferredFrom)}</td>
                     `;
                     historyTable.appendChild(row)
                 });
@@ -648,4 +648,10 @@ function showChangeUserModal() {
 
 function showChangePassModal() {
     document.getElementById("changePassModal").style.display = "block";
+}
+
+function escapeHtml(text) {
+    const tempElement = document.createElement("div");
+    tempElement.textContent= text;
+    return tempElement.innerHTML;
 }
