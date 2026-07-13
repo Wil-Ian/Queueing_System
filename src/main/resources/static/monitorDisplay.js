@@ -61,7 +61,7 @@ function loadQueue() {
                     allServing.forEach(serveItem => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
-                    <td>${serveItem.user.consignee}</td>
+                    <td>${escapeHtml(serveItem.user.consignee)}</td>
                     <td>${serveItem.windowId}</td>
                     `;
                         servingTable.appendChild(row);
@@ -78,29 +78,37 @@ function loadQueue() {
                 const secondBatch = allQueue.slice(rowsPerTable, rowsPerTable * 2);
 
                 const fillTable = (table, items) => {
-                    items.forEach(queueItem => {
+                    if (items.length === 0) {
                         const row = document.createElement("tr");
-                        if (queueItem.user.priority === "PRIORITY") {
-                            row.classList.add("priority-row");
-                        }
-                        row.innerHTML = `
-                            <td>${queueItem.user.consignee}</td>
-                            <td>${queueItem.user.priority}</td>
-                        `;
+                        row.classList.add("empty-state-row");
+                        row.innerHTML =`
+                        <td colspan="2">No one currently in queue.</td>
+                    `;
                         table.appendChild(row);
-                    });
+                    } else {
+                        items.forEach(queueItem => {
+                            const row = document.createElement("tr");
+                            if (queueItem.user.priority === "PRIORITY") {
+                                row.classList.add("priority-row");
+                            }
+                            row.innerHTML = `
+                            <td>${escapeHtml(queueItem.user.consignee)}</td>
+                            <td>${escapeHtml(queueItem.user.priority)}</td>
+                        `;
+                            table.appendChild(row);
+                        });
 
-                    for (let i = items.length; i < rowsPerTable; i++) {
-                        const emptyRow = document.createElement("tr");
-                        emptyRow.classList.add("empty-row");
-                        emptyRow.innerHTML = `
+                        for (let i = items.length; i < rowsPerTable; i++) {
+                            const emptyRow = document.createElement("tr");
+                            emptyRow.classList.add("empty-row");
+                            emptyRow.innerHTML = `
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                         `;
-                        table.appendChild(emptyRow);
+                            table.appendChild(emptyRow);
+                        }
                     }
                 };
-
                 fillTable(queueTable, firstBatch);
                 fillTable(queueTableTwo, secondBatch);
             }
@@ -118,3 +126,9 @@ window.addEventListener("load", () => {
 setInterval(updateClock, 1000);
 // update loadQueue every 5 seconds
 setInterval(loadQueue, 5000);
+
+function escapeHtml(text) {
+    const tempElement = document.createElement("div");
+    tempElement.textContent= text;
+    return tempElement.innerHTML;
+}
