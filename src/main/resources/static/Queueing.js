@@ -50,6 +50,11 @@ function resetFlow() {
         nameInput.value = "";
     }
 
+    const consigneeInput = document.getElementById("consigneeInput");
+    if (consigneeInput) {
+        consigneeInput.value = "";
+    }
+
     const officeSelect = document.getElementById("officeSelect");
     if (officeSelect) {
         officeSelect.selectedIndex = 0;
@@ -104,6 +109,13 @@ document.getElementById("resultSubmit")?.addEventListener("click", function() {
 // fetch window
 document.getElementById("nameSubmit").addEventListener("click", function() {
     const personName = document.getElementById("nameInput").value.trim();
+    const consigneeName = document.getElementById("consigneeInput").value.trim();
+
+    const regex = /^[a-zA-Z ]+$/;
+    if(!regex.test(personName )) {
+        alert("Please use upper and lowercase letters only.");
+        return;
+    }
 
     setLoading(true);
 
@@ -118,6 +130,7 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 },
                 body: JSON.stringify({
                     name: personName,
+                    consignee: consigneeName,
                     priority: selectedStatus
                 })
             })
