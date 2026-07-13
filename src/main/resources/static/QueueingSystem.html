@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="Queueing.css">
 </head>
 <body>
+<div class="page-shell">
 <!-- Header -->
 <header>
     <div class="header-main">
@@ -61,8 +62,14 @@
                 <p>PRIORITY TYPE</p>
             </div>
             <br><br><br>
-            <input type="button" class="regular_btn status_btn body_btn" value="REGULAR" id="reg"><br>
-            <input type="button" class="priority_btn status_btn body_btn" value="PRIORITY" id="prio"><br>
+            <button type="button" class="regular_btn status_btn body_btn" id="reg" value="REGULAR">
+                <img src="assets/person.png" alt="Regular user" class="status-icon">
+                REGULAR
+            </button><br>
+            <button type="button" class="priority_btn status_btn body_btn" id="prio" value="PRIORITY">
+                <img src="assets/accessible.png" alt="Priority user" class="status-icon">
+                PRIORITY
+            </button><br>
             <input type="button" class="back_btn body_btn" value="< BACK">
         </div>
     </div>
@@ -72,15 +79,12 @@
             <div class="welcome-text">
                 <p>TRANSACTION TYPE</p>
             </div>
-
             <input type="button" class="receiving_btn category_btn body_btn" value="Receiving" id="receive">
-
-            <input type="button" class="inquiry_btn category_btn body_btn" value="Inquiry" id="inquire">
-
-            <input type="button" class="followup_btn category_btn body_btn" value="Follow up" id="follow">
-
+            <input type="button" class="evalOp_btn category_btn body_btn" value="Evaluation: Operations" id="operations">
+            <input type="button" class="evalAssess_btn category_btn body_btn" value="Evaluation: Assessment" id="assessment">
+            <input type="button" class="inquiry_btn category_btn body_btn" value="Information Desk & Pass Control" id="inquire">
+            <input type="button" class="followup_btn category_btn body_btn" value="Releasing/Follow up" id="follow">
             <input type="button" class="cashier_btn category_btn body_btn" value="Cashier" id="cash">
-
             <input type="button" class="appointment_btn body_btn" value="Appointment" id="appoint">
             <input type="button" class="back_btn body_btn" value="< BACK">
         </div>
@@ -122,10 +126,9 @@
 
     <div id="nameScreen" class="screen name">
         <div class="body-main">
-            <div class="welcome-text">
-                <p>PLEASE ENTER A NAME/NICKNAME:</p>
-            </div><br>
-            <label for="nameInput">Enter nickname here...</label>
+                <label for="consigneeInput">PLEASE ENTER CONSIGNEE'S NAME:</label>
+            <input type="text" id="consigneeInput">
+                <label for="nameInput">PLEASE ENTER NAME/NICKNAME:</label>
             <input type="text" id="nameInput">
             <input type="submit" id="nameSubmit" class="body_btn"><br>
             <input type="button" class="back_btn body_btn" value="< BACK">
@@ -160,7 +163,7 @@
         </div>
     </div>
 </footer>
-
+</div>
 <script src="Queueing.js"></script>
 </body>
 </html>
