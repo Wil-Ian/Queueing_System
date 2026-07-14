@@ -1,17 +1,54 @@
-const token = "";
 let currentServingId = null;
 let currentWindowId = null;
 let currentEmployeeId = null;
 let missedCount = null;
 let dailyVolume = null;
 
+function authFetch(url, options) {
+    const accessToken = localStorage.getItem('accessToken');
+        const possibleOptions = {
+            ...options,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            }
+        };
+        return fetch(url, possibleOptions)
+            .then(response => {
+                if (response.status === 401) {
+                    const refreshToken = localStorage.getItem('refreshToken');
+                    return fetch("https://localhost:8443/auth/refresh", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${refreshToken}`,
+                            "Content-Type": "application/json"
+                        }
+                    })
+                        .then(refreshResponse => {
+                            return refreshResponse.json().then(body => {
+                                if(!refreshResponse.ok) {
+                                    const err = new Error(body.error);
+                                    throw err;
+                                }
+                                return body;
+                            });
+                        })
+                        .then(refreshBody => {
+                            localStorage.setItem('accessToken', refreshBody.accessToken);
+                            return authFetch(url, options);
+                        })
+                        .catch(refreshError => {
+                            console.error("User has failed to receive an access token.")
+                            window.location.href = "loginScreen.html";
+                        })
+                } else {
+                    return response;
+                }
+            });
+}
+
 function loadDashboard() {
-    fetch("https://localhost:8443/employee/me", {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
-    })
+    authFetch("https://localhost:8443/employee/me", {})
         .then(response => response.json())
         .then(employee => {
             const windowId = employee.window.windowId;
@@ -28,40 +65,20 @@ function loadDashboard() {
             }
 
             const mainFetch = Promise.all([
-                fetch(`https://localhost:8443/queue/window-queue?windowId=${windowId}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                authFetch(`https://localhost:8443/queue/window-queue?windowId=${windowId}`, {
+                    method: "GET"
                 }),
-                fetch(`https://localhost:8443/queue/reports/queue-count?windowId=${windowId}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                authFetch(`https://localhost:8443/queue/reports/queue-count?windowId=${windowId}`, {
+                    method: "GET"
                 }),
-                fetch(`https://localhost:8443/queue/reports/missed-count?windowId=${windowId}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                authFetch(`https://localhost:8443/queue/reports/missed-count?windowId=${windowId}`, {
+                    method: "GET"
                 }),
-                fetch(`https://localhost:8443/queue/reports/daily-volume?windowId=${windowId}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                authFetch(`https://localhost:8443/queue/reports/daily-volume?windowId=${windowId}`, {
+                    method: "GET"
                 }),
-                fetch(`https://localhost:8443/queue/reports/transfer-count?transferredFrom=${windowId}`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                authFetch(`https://localhost:8443/queue/reports/transfer-count?transferredFrom=${windowId}`, {
+                    method: "GET"
                 })
             ]).then(responses => {
                 return Promise.all(responses.map(response => response.json()));
@@ -110,12 +127,8 @@ function loadDashboard() {
                         totalReferred.innerHTML = transferCount;
                     }
                 })
-            fetch(`https://localhost:8443/queue/live-status?windowId=${windowId}`, {
+            authFetch(`https://localhost:8443/queue/live-status?windowId=${windowId}`, {
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
             })
                 .then(response => {
                     const currentServing = document.getElementById("currentServing");
@@ -203,12 +216,8 @@ function setupEventListeners() {
 window.addEventListener("load", setupEventListeners);
 
 function requeueUser(queueId) {
-    fetch(`https://localhost:8443/queue/${queueId}/requeue`, {
-        method: "PUT",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
+    authFetch(`https://localhost:8443/queue/${queueId}/requeue`, {
+        method: "PUT"
     })
         .then(response => {
             return response.json().then(body => {
@@ -231,12 +240,8 @@ function requeueUser(queueId) {
 }
 
 function completeUser(currentServingId) {
-    fetch(`https://localhost:8443/queue/${currentServingId}`, {
+    authFetch(`https://localhost:8443/queue/${currentServingId}`, {
         method: "PUT",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify({
             status: "COMPLETED",
             windowId: currentWindowId
@@ -265,12 +270,8 @@ function completeUser(currentServingId) {
 }
 
 function logout() {
-    fetch(`https://localhost:8443/auth/logout`, {
-        method: "POST",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
+    authFetch(`https://localhost:8443/auth/logout`, {
+        method: "POST"
     })
         .then(response => {
             return response.text().then(body => {
@@ -281,7 +282,9 @@ function logout() {
             });
         })
         .then(out => {
-            alert("Logged out successfully.")
+            alert("Logged out successfully.");
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             window.location.href = "loginScreen.html";
         })
         .catch
@@ -292,12 +295,8 @@ function logout() {
 }
 
 function nextUser() {
-    fetch(`https://localhost:8443/queue/next-person?windowId=${currentWindowId}`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
+    authFetch(`https://localhost:8443/queue/next-person?windowId=${currentWindowId}`, {
+        method: "GET"
     })
         .then(response => {
             if (response.status === 204) {
@@ -308,12 +307,8 @@ function nextUser() {
         })
         .then(queue => {
             if(queue) {
-                fetch(`https://localhost:8443/queue/${queue.queueId}`, {
+                authFetch(`https://localhost:8443/queue/${queue.queueId}`, {
                     method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    },
                     body: JSON.stringify({
                         status: "SERVING",
                         windowId: currentWindowId
@@ -347,12 +342,8 @@ function nextUser() {
 
 function openTransferModal() {
     document.getElementById("transferModal").style.display = "block";
-    fetch(`https://localhost:8443/window`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
+    authFetch(`https://localhost:8443/window`, {
+        method: "GET"
     })
         .then(response => response.json())
         .then(windows  => {
@@ -371,12 +362,8 @@ function transferUser(windowId) {
     const confirmed = confirm("Are you sure you want to transfer this client?");
     console.log("Transferring queue ID:", currentServingId, "to window:", windowId, "with status: TRANSFERRED");
     if (confirmed) {
-        fetch(`https://localhost:8443/queue/${currentServingId}`, {
+        authFetch(`https://localhost:8443/queue/${currentServingId}`, {
             method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({
                 status: "TRANSFERRED",
                 windowId: windowId
@@ -471,19 +458,11 @@ window.addEventListener("resize", () => {
 
 function loadAnalytics() {
     const analyticsFetch = Promise.all([
-        fetch(`https://localhost:8443/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
+        authFetch(`https://localhost:8443/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
+            method: "GET"
         }),
-        fetch(`https://localhost:8443/queue/reports/avg-service-time?windowId=${currentWindowId}`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
+        authFetch(`https://localhost:8443/queue/reports/avg-service-time?windowId=${currentWindowId}`, {
+            method: "GET"
         })
     ])
         .then(responses => {
@@ -512,12 +491,8 @@ function loadAnalytics() {
 }
 
 function loadHistory() {
-    fetch(`https://localhost:8443/queue/finished-queue?windowId=${currentWindowId}`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        }
+    authFetch(`https://localhost:8443/queue/finished-queue?windowId=${currentWindowId}`, {
+        method: "GET"
     })
         .then(response => {
             return response.json().then(body => {
@@ -557,12 +532,8 @@ function loadHistory() {
 
 function changeUsername() {
     const userNameInput = document.getElementById("userNameInput");
-    fetch(`https://localhost:8443/employee/${currentEmployeeId}/name`, {
+    authFetch(`https://localhost:8443/employee/${currentEmployeeId}/name`, {
         method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify(userNameInput.value)
     })
         .then(response => {
@@ -589,12 +560,8 @@ function changePassword() {
     const confirmPassInput = document.getElementById("confirmPassInput");
 
     if(newPassInput.value === confirmPassInput.value) {
-        fetch(`https://localhost:8443/employee/${currentEmployeeId}/password`, {
+        authFetch(`https://localhost:8443/employee/${currentEmployeeId}/password`, {
             method: "PATCH",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({
                 currentPassword: passInput.value,
                 newPassword: newPassInput.value
