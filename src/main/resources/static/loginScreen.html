@@ -2,23 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="loginScreen.css">
 </head>
 <body>
-
-<div class="login-wrapper">
-    <div class="login-screen">
-        <div class="login-input">
-            <label for="emailInput">Email address</label>
-            <input type="text" id="emailInput">
-
-            <label for="passwordInput">Password</label>
-            <input type="password" id="passwordInput">
-
-            <input type="submit" id="loginSubmit" class="body_btn">
+<div class="page-shell">
+    <header>
+        <div class="header-main">
+            <div class="header-left header-logo">
+                <img src="assets/1002.png" alt="BOC Logo" class="BoC-logo">
+                <div class="header-text">
+                    <div class="htext-1">
+                        <p>REPUBLIC OF THE PHILIPPINES</p>
+                    </div>
+                    <div class="htext-2">
+                        <p>BUREAU OF CUSTOMS</p>
+                        <hr class="header-hr">
+                    </div>
+                    <div class="htext-3">
+                        <p><b>PORT OF CLARK INTERNATIONAL AIRPORT</b></p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <p id="current_time"></p>
+                <p id="current_date"></p>
+                <p>QUEUEING SYSTEM</p>
+            </div>
         </div>
-    </div>
-</div>
+    </header>
 
+    <main class="login-screen">
+        <div class="login-panel">
+            <div class="login-panel__title">
+                <p>Login</p>
+            </div>
+            <form class="login-form" autocomplete="off">
+                <div class="login-input-group">
+                    <label for="emailInput">Email address</label>
+                    <input type="text" id="emailInput" placeholder="name@example.com">
+                </div>
+                <div class="login-input-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" id="passwordInput" placeholder="Enter your password">
+                </div>
+                <button type="button" id="loginSubmit" class="login-submit">Login</button>
+            </form>
+        </div>
+    </main>
+</div>
+<script src="loginScreen.js"></script>
 </body>
 </html>
