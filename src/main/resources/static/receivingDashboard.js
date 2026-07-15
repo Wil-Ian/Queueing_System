@@ -1,8 +1,22 @@
 let currentServingId = null;
 let currentWindowId = null;
 let currentEmployeeId = null;
+let currentCategory = null;
 let missedCount = null;
 let dailyVolume = null;
+
+const categoryButtons = {
+    "Receiving": ["operationBtn", "assessBtn"],
+    "Evaluation: Operations": ["releasingBtn"],
+    "Evaluation: Assessment": ["releasingBtn"],
+    "Releasing/Follow Up": ["cashierBtn"],
+    "Information Desk and Pass Control": ["cashierBtn"],
+    "Appointment": ["cashierBtn"]
+};
+
+const transferButtons = [
+    "operationBtn", "assessBtn", "releasingBtn", "cashierBtn"
+];
 
 function authFetch(url, options) {
     const accessToken = localStorage.getItem('accessToken');
@@ -48,12 +62,17 @@ function authFetch(url, options) {
 }
 
 function loadDashboard() {
+    if (!localStorage.getItem('accessToken')) {
+        window.location.href = "loginScreen.html";
+        return;
+    }
     authFetch("https://localhost:8443/employee/me", {})
         .then(response => response.json())
         .then(employee => {
             const windowId = employee.window.windowId;
             currentWindowId = windowId;
             currentEmployeeId = employee.employeeId;
+            currentCategory = employee.window.category;
             const employeeName = document.getElementById("employeeName");
             const windowTitle = document.getElementById("windowTitle");
 
@@ -347,13 +366,30 @@ function openTransferModal() {
     })
         .then(response => response.json())
         .then(windows  => {
+            const allowedButtons = categoryButtons[currentCategory] || [];
+
+            transferButtons.forEach(buttonId => {
+                const element = document.getElementById(buttonId);
+                if (element) {
+                    element.classList.toggle("hidden", !allowedButtons.includes(buttonId));
+                }
+            });
+
             const matchOperation = windows .find(window => window.category === "Evaluation: Operations");
             const matchAssessment = windows .find(window => window.category === "Evaluation: Assessment");
+            const matchReleasing = windows .find(window => window.category === "Releasing/Follow Up");
+            const matchCashier = windows .find(window => window.category === "Cashier");
             document.getElementById("operationBtn").onclick = function() {
                 transferUser(matchOperation.windowId);
             }
             document.getElementById("assessBtn").onclick = function() {
                 transferUser(matchAssessment.windowId);
+            }
+            document.getElementById("releasingBtn").onclick = function() {
+                transferUser(matchReleasing.windowId);
+            }
+            document.getElementById("cashierBtn").onclick = function() {
+                transferUser(matchCashier.windowId);
             }
         })
 }
@@ -457,6 +493,10 @@ window.addEventListener("resize", () => {
 });
 
 function loadAnalytics() {
+    if (!localStorage.getItem('accessToken')) {
+        window.location.href = "loginScreen.html";
+        return;
+    }
     const analyticsFetch = Promise.all([
         authFetch(`https://localhost:8443/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
             method: "GET"
@@ -491,6 +531,10 @@ function loadAnalytics() {
 }
 
 function loadHistory() {
+    if (!localStorage.getItem('accessToken')) {
+        window.location.href = "loginScreen.html";
+        return;
+    }
     authFetch(`https://localhost:8443/queue/finished-queue?windowId=${currentWindowId}`, {
         method: "GET"
     })
