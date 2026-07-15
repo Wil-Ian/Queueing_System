@@ -3,22 +3,27 @@ package com.example.demo.services;
 import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Queue;
+import com.example.demo.models.Window;
 import com.example.demo.repositories.QueueRepository;
+import com.example.demo.repositories.WindowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class QueueService {
 
     private final QueueRepository queueRepository;
+    private final WindowRepository windowRepository;
 
     @Autowired
-    public QueueService(QueueRepository queueRepository) {
+    public QueueService(QueueRepository queueRepository, WindowRepository windowRepository) {
         this.queueRepository = queueRepository;
+        this.windowRepository = windowRepository;
     }
 
     public List<Queue> getAllQueues() {
@@ -60,7 +65,14 @@ public class QueueService {
             queue.setWindowId(updatedQueue.getWindowId());
             queue.setStatus(updatedQueue.getStatus());
             if(updatedQueue.getStatus().equals("TRANSFERRED")) {
-                queue.setTransferredFrom(originalWindowId);
+                Window sourceWindow = windowRepository.findById(originalWindowId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Source Window with ID " + originalWindowId + " not found."));
+                Window destinationWindow = windowRepository.findById(updatedQueue.getWindowId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Destination Window with ID " + updatedQueue.getWindowId() + " not found."));
+                boolean allowed = isTransferAllowed(sourceWindow.getCategory(), destinationWindow.getCategory());
+                if(!allowed) {
+                    throw new InvalidOperationException("Error: This transfer path isn't allowed by business rules.");
+                }
             }
             if(updatedQueue.getStatus().equals("SERVING")) {
                 queue.setServingStartedAt(LocalDateTime.now());
@@ -71,7 +83,7 @@ public class QueueService {
             }
             return queueRepository.save(queue);
         }
-        throw new ResourceNotFoundException("Queue with ID " + id + " not found");
+        throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
     }
 
     public void deleteQueue(Integer id) {
@@ -81,9 +93,16 @@ public class QueueService {
             queue.setActive(false);
             queueRepository.save(queue);
         } else {
-            throw new ResourceNotFoundException("Queue with ID " + id + " not found");
+            throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
         }
     }
+    private static final Map<String, List<String>> ALLOWED_TRANSFERS = Map.of(
+            "Receiving", List.of("Evaluation: Operations", "Evaluation: Assessment"),
+            "Evaluation: Operations", List.of("Releasing/Follow Up"),
+            "Evaluation: Assessment", List.of("Releasing/Follow Up"),
+            "Releasing/Follow Up", List.of("Cashier"),
+            "Information Desk and Pass Control", List.of("Cashier"),
+            "Appointment", List.of("Cashier"));
 
     public Long getDailyVolume(Integer windowId) {
         return queueRepository.countCompletedToday(windowId);
@@ -134,9 +153,14 @@ public class QueueService {
                 queue.setTimeStamp(LocalDateTime.now());
                 return queueRepository.save(queue);
             } else {
-                throw new InvalidOperationException("Error: Client does not have the status 'WAITING'");
+                throw new InvalidOperationException("Error: Client does not have the status 'WAITING'.");
             }
         }
-        throw new ResourceNotFoundException("Queue with ID " + id + " not found");
+        throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
+    }
+
+    private boolean isTransferAllowed(String sourceCategory, String destinationCategory) {
+        List<String> allowedDestinations = ALLOWED_TRANSFERS.get(sourceCategory);
+        return allowedDestinations != null && allowedDestinations.contains(destinationCategory);
     }
 }
