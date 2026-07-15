@@ -29,6 +29,7 @@ public class EmployeeService {
     public Employee createEmployee(Employee employee) {
         String hashedPassword = passwordEncoder.encode(employee.getPassword());
         employee.setPassword(hashedPassword);
+        employee.setActive(true);
         return employeeRepository.save(employee);
     }
 
