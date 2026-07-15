@@ -15,7 +15,7 @@ document.getElementById("loginSubmit").addEventListener("click", function() {
         .then(response => {
             return response.json().then(body => {
                 if (!response.ok) {
-                    throw new Error(body);
+                    throw new Error(body.error);
                 }
                 return body;
             });
@@ -26,8 +26,8 @@ document.getElementById("loginSubmit").addEventListener("click", function() {
             window.location.href = "receivingDashboard.html";
         })
         .catch(error => {
-            console.error("Error.", error);
-            alert("Error.");
+            console.error("Login error.", error.message);
+            alert(error.message);
         })
 
 });
