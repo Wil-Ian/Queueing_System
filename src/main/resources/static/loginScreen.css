@@ -25,7 +25,7 @@ body {
 }
 
 header {
-    background: rgba(0, 32, 64, 0.75);
+    background: rgba(0, 32, 64, 0.50);
     backdrop-filter: blur(14px);
     padding: 14px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -102,7 +102,7 @@ header {
     min-width: 280px;
     max-height: calc(100vh - 120px);
     padding: 32px 28px;
-    background: rgba(11, 24, 52, 0.9);
+    background: rgba(0, 32, 64, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 28px;
     box-shadow: 0 40px 80px rgba(0, 0, 0, 0.24);
