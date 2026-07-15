@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "employee")
 public class Employee extends Person{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer employeeId;
 
     @OneToOne
