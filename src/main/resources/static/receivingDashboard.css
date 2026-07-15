@@ -547,6 +547,10 @@ tbody tr:nth-child(odd) {
     color: #151A2D;
 }
 
+.hidden {
+    display: none;
+}
+
 /* ANALYTICS */
 #analyticsScreen {
     display: none;
