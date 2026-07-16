@@ -1,3 +1,5 @@
+let previousServingIds = new Set();
+
 function updateClock() {
     const now = new Date();
     const timeElement = document.getElementById("current_time");
@@ -64,6 +66,11 @@ function loadQueue() {
                     <td>${escapeHtml(serveItem.user.consignee)}</td>
                     <td>${serveItem.windowId}</td>
                     `;
+                        const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
+                        if(!previousServingIds.has(serveItem.queueId)) {
+                            speakText(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
+                        }
+                        previousServingIds.add(serveItem.queueId);
                         servingTable.appendChild(row);
                     })
                 }
@@ -125,10 +132,28 @@ window.addEventListener("load", () => {
 
 setInterval(updateClock, 1000);
 // update loadQueue every 5 seconds
-setInterval(loadQueue, 5000);
+setInterval(loadQueue, 2000);
 
 function escapeHtml(text) {
     const tempElement = document.createElement("div");
     tempElement.textContent= text;
     return tempElement.innerHTML;
+}
+
+function speakText(input) {
+    fetch("http://localhost:8880/v1/audio/speech", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            model: "kokoro",
+            voice: "af_heart",
+            input
+        })
+    })
+        .then(response => response.blob())
+        .then(audioBlob => {
+            const url = URL.createObjectURL(audioBlob);
+            const audio = new Audio(url);
+            audio.play();
+        });
 }
