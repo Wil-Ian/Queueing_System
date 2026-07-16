@@ -5,6 +5,73 @@
     min-height: 0;
 }
 
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 32, 64, 0.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: min(92vw, 680px);
+    max-width: 680px;
+    background: linear-gradient(135deg, #ffffff 0%, #f7f7f7 100%);
+    color: #002040;
+    padding: 32px 34px;
+    border-radius: 18px;
+    border: 2px solid #E2C97E;
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.28);
+    text-align: center;
+    animation: modalRise 0.22s ease-out;
+}
+
+.modal-content p {
+    margin: 0 0 14px;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.5px;
+    color: #002040;
+}
+
+.modal-content .body_btn {
+    margin: 10px 8px 0;
+    width: 150px;
+    padding: 16px 24px;
+    font-size: 18px;
+}
+
+.modal-content #closeModal {
+    background: transparent;
+    border: 2px solid #002040;
+    color: #002040;
+}
+
+.modal-content #closeModal:hover {
+    background: rgba(0, 32, 64, 0.08);
+    color: #00162f;
+}
+
+@keyframes modalRise {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .loading-overlay {
     position: fixed;
     inset: 0;
