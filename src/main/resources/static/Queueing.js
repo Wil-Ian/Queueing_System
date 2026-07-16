@@ -67,13 +67,30 @@ document.querySelector(".start_btn")?.addEventListener("click", function() {
 });
 
 // hide priority, show category
-const buttonStatus = document.querySelectorAll(".status_btn");
-buttonStatus.forEach(button => {
-    button.addEventListener("click", function() {
-        selectedStatus = button.value;
-        showScreen("categoryScreen");
-    });
-});
+
+document.getElementById("reg").onclick = function() {
+    selectedStatus = "REGULAR";
+    showScreen("categoryScreen");
+}
+
+function openPriorityModal() {
+    document.getElementById("priorityModal").style.display = "block";
+}
+
+document.getElementById("prioModal").onclick = function() {
+    openPriorityModal();
+}
+
+document.getElementById("prio").onclick = function() {
+    document.getElementById("priorityModal").style.display = "none";
+    selectedStatus = "PRIORITY";
+    showScreen("categoryScreen");
+}
+
+document.getElementById("closeModal").onclick = function() {
+    document.getElementById("priorityModal").style.display = "none";
+}
+
 
 // hide category, show name
 const buttonCategory = document.querySelectorAll(".category_btn");
