@@ -76,6 +76,9 @@ function loadDashboard() {
             const employeeName = document.getElementById("employeeName");
             const windowTitle = document.getElementById("windowTitle");
 
+            const transferBtn = document.getElementById("transferBtn");
+            transferBtn.classList.toggle("hidden", currentCategory === "Cashier");
+
             if (employeeName) {
                 employeeName.innerHTML = escapeHtml(employee.name);
             }
