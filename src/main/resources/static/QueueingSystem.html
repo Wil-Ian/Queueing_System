@@ -66,10 +66,22 @@
                 <img src="assets/person.png" alt="Regular user" class="status-icon">
                 REGULAR
             </button><br>
-            <button type="button" class="priority_btn status_btn body_btn" id="prio" value="PRIORITY">
+            <button type="button" class="priority_btn status_btn body_btn" id="prioModal">
                 <img src="assets/accessible.png" alt="Priority user" class="status-icon">
                 PRIORITY
-            </button><br>
+            </button>
+            <div id="priorityModal" class="modal">
+                <div class="modal-content">
+                    <p>You are about to join the Priority Queue. Please ensure that you have sufficient supporting documentation or proof to substantiate your claim. Failure to provide the necessary proof may result in the invalidation of your queue ticket and reassignment to the end of the regular queue.</p>
+                    <br>
+                    <p>Do you wish to proceed?</p>
+                    <button type="button" class="body_btn" id="prio" value="PRIORITY">
+                        YES
+                    </button>
+                    <button type="button" class="close body_btn" id="closeModal">NO</button>
+                </div>
+            </div>
+            <br>
             <input type="button" class="back_btn body_btn" value="< BACK">
         </div>
     </div>
@@ -80,10 +92,8 @@
                 <p>TRANSACTION TYPE</p>
             </div>
             <input type="button" class="receiving_btn category_btn body_btn" value="Receiving" id="receive">
-            <input type="button" class="evalOp_btn category_btn body_btn" value="Evaluation: Operations" id="operations">
-            <input type="button" class="evalAssess_btn category_btn body_btn" value="Evaluation: Assessment" id="assessment">
             <input type="button" class="inquiry_btn category_btn body_btn" value="Information Desk & Pass Control" id="inquire">
-            <input type="button" class="followup_btn category_btn body_btn" value="Releasing/Follow up" id="follow">
+            <input type="button" class="followup_btn category_btn body_btn" value="Releasing/Follow Up" id="follow">
             <input type="button" class="cashier_btn category_btn body_btn" value="Cashier" id="cash">
             <input type="button" class="appointment_btn body_btn" value="Appointment" id="appoint">
             <input type="button" class="back_btn body_btn" value="< BACK">
@@ -144,7 +154,7 @@
                 <p>You are now in the queue.</p>
                 <p>Please wait until your name gets called, then head over to your respective window.</p>
             </div>
-            <input type="submit" id="resultSubmit" class="body_btn" value="BACK TO START">
+            <input type="submit" id="resultSubmit" class="body_btn" value="BACK TO START"><br>
         </div>
     </div>
 </div>
