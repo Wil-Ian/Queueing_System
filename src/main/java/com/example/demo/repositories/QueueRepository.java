@@ -41,7 +41,7 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     @Query(value = "SELECT * FROM queue WHERE window_id = :windowId AND status IN ('COMPLETED', 'TRANSFERRED', 'NO_RESPONSE') ORDER BY time_stamp DESC", nativeQuery = true)
     List<Queue> finishedQueue(@Param("windowId") Integer windowId);
 
-    @Query(value = "SELECT q.* FROM queue q JOIN users u ON q.user_id = u.user_id WHERE status = 'WAITING' AND q.is_active = true ORDER BY u.priority ASC, time_stamp ASC", nativeQuery = true)
+    @Query(value = "SELECT q.* FROM queue q INNER JOIN users u ON q.user_id = u.user_id INNER JOIN \"window\" w ON q.window_id = w.window_id WHERE status = 'WAITING' AND w.category NOT IN ('Evaluation: Operations', 'Evaluation: Assessment') AND q.is_active = true ORDER BY u.priority ASC, q.time_stamp ASC", nativeQuery = true)
     List<Queue> findAllInQueue();
 
     @Query(value = "SELECT * FROM queue WHERE status = 'SERVING' AND is_active = true ORDER BY time_stamp ASC", nativeQuery = true)
