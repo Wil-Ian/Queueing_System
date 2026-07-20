@@ -41,6 +41,7 @@ public class AuthService {
             if(passwordEncoder.matches(password, employee.getPassword())) {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
+                authResponse.setRole("EMPLOYEE");
                 authResponse.setRefreshToken(util.generateRefreshToken(email));
                 return authResponse;
             } else {
@@ -51,6 +52,7 @@ public class AuthService {
             if(passwordEncoder.matches(password, admin.getPassword())) {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setAccessToken(util.generateToken(email, "ADMIN"));
+                authResponse.setRole("ADMIN");
                 authResponse.setRefreshToken(util.generateRefreshToken(email));
                 return authResponse;
             } else {
