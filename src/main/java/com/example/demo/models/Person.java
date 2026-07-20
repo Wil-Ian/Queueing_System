@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -24,6 +25,7 @@ public class Person {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
