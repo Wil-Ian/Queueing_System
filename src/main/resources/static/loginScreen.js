@@ -23,7 +23,11 @@ document.getElementById("loginSubmit").addEventListener("click", function() {
         .then(success => {
             localStorage.setItem('accessToken', success.accessToken);
             localStorage.setItem('refreshToken', success.refreshToken);
-            window.location.href = "receivingDashboard.html";
+            if(success.role === "ADMIN") {
+                window.location.href = "adminDashboard.html";
+            } else {
+                window.location.href = "receivingDashboard.html";
+            }
         })
         .catch(error => {
             console.error("Login error.", error.message);
