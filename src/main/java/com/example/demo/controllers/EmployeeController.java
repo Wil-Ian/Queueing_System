@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.ChangePasswordRequest;
+import com.example.demo.dto.ResetPasswordRequest;
 import com.example.demo.models.Employee;
 import com.example.demo.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,10 @@ public class EmployeeController {
     @PatchMapping("/{id}/password")
     public Employee patchPassword(@PathVariable Integer id, @RequestBody ChangePasswordRequest request) {
         return employeeService.patchEmployeePassword(id, request.getCurrentPassword(), request.getNewPassword());
+    }
+
+    @PatchMapping("/{id}/admin-reset-password")
+    public void resetEmployeePassword(@PathVariable Integer id, @RequestBody ResetPasswordRequest request) {
+        employeeService.adminResetPassword(id, request.getNewPassword());
     }
 }
