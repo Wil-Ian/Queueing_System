@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.exceptions.InvalidCredentialsException;
+import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Employee;
 import com.example.demo.repositories.EmployeeRepository;
@@ -27,6 +28,9 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(Employee employee) {
+        if(employee.getWindow() == null) {
+            throw new InvalidOperationException("Employee is not assigned a window.", "EMPLOYEE_NO_WINDOW");
+        }
         String hashedPassword = passwordEncoder.encode(employee.getPassword());
         employee.setPassword(hashedPassword);
         employee.setActive(true);
@@ -37,8 +41,12 @@ public class EmployeeService {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
-            employee.setEmail(updatedEmployee.getEmail());
-            employee.setName(updatedEmployee.getName());
+            if (updatedEmployee.getEmail() != null && !updatedEmployee.getEmail().isBlank()) {
+                employee.setEmail(updatedEmployee.getEmail());
+            }
+            if (updatedEmployee.getName() != null && !updatedEmployee.getName().isBlank()) {
+                employee.setName(updatedEmployee.getName());
+            }
             employee.setWindow(updatedEmployee.getWindow());
             return employeeRepository.save(employee);
         }
@@ -86,6 +94,18 @@ public class EmployeeService {
             } else {
                 throw new InvalidCredentialsException("Password does not match.");
             }
+        } else {
+            throw new ResourceNotFoundException("Employee with ID " + id + " not found");
+        }
+    }
+
+    public void adminResetPassword(Integer id, String newPassword) {
+        Optional<Employee> existingEmployee = employeeRepository.findById(id);
+        if(existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            String hashedPassword = passwordEncoder.encode(newPassword);
+            employee.setPassword(hashedPassword);
+            employeeRepository.save(employee);
         } else {
             throw new ResourceNotFoundException("Employee with ID " + id + " not found");
         }
