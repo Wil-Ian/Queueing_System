@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.security.CustomAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import com.example.demo.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter, CustomAuthenticationEntryPoint authenticationEntryPoint) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter, AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(request -> {
