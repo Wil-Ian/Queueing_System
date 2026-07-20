@@ -84,6 +84,7 @@ function loadDashboard() {
                     <td>${escapeHtml(queue.timeStamp)}</td>
                     <td>${escapeHtml(queue.user.priority)}</td>
                     <td>${escapeHtml(queue.callCount)}</td>
+                    <td>${escapeHtml(queue.user.office || "")}</td>
                     <td>
                         <input type="button" value="Requeue User" onclick="requeueUser('${queue.queueId}')">
                     </td>
