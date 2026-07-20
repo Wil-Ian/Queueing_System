@@ -7,7 +7,9 @@ import com.example.demo.models.Window;
 import com.example.demo.repositories.QueueRepository;
 import com.example.demo.repositories.WindowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -162,5 +164,12 @@ public class QueueService {
     private boolean isTransferAllowed(String sourceCategory, String destinationCategory) {
         List<String> allowedDestinations = ALLOWED_TRANSFERS.get(sourceCategory);
         return allowedDestinations != null && allowedDestinations.contains(destinationCategory);
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void expireStaleQueueEntries() {
+        queueRepository.expireStaleUsers();
+        queueRepository.expireStaleQueues();
     }
 }
