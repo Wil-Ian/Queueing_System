@@ -19,7 +19,7 @@
         <span class="material-symbols-rounded">menu</span>
     </button>
 
-    <aside>
+    <aside class="sidebar">
         <!-- Sidebar Header -->
         <header class="sidebar-header">
             <div class="sidebar-brand">
@@ -54,34 +54,12 @@
 
                 <!-- Windows -->
                 <li class="nav-item">
-                    <a href="#" onclick="showWindows()" id="windowBtn">
+                    <a href="#" class="nav-link" onclick="showWindowDashboard()" id="windowBtn">
                         <span class="material-symbols-rounded">window</span>
                         <span class="nav-label">Windows</span>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="nav-item"><a class="nav-link dropdown-title">Windows</a></li>
-                    </ul>
-                </li>
-
-                <!-- Create Employee -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link dropdown-toggle" onclick="showCreateEmployeeModal()">
-                        <span class="material-symbols-outlined">person_add</span>
-                        <span class="nav-label">Create Employee</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="nav-item"><a class="nav-link dropdown-title">Create Employee</a></li>
-                    </ul>
-                </li>
-
-                <!-- Employee Forgot Password -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link dropdown-toggle" onclick="showForgotPassModal()">
-                        <span class="material-symbols-rounded">Password</span>
-                        <span class="nav-label">Employee Forgot Password?</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="nav-item"><a class="nav-link dropdown-title">Employee Forgot Password?</a></li>
                     </ul>
                 </li>
 
@@ -110,7 +88,7 @@
         </div>
 
         <!-- Employee Table -->
-        <div class="table-wrapper employee-screen">
+        <div class="table-wrapper employee-screen" id="employeeScreen">
             <table>
                 <thead>
                 <tr>
@@ -128,15 +106,14 @@
         </div>
 
         <!-- Window Table -->
-        <div class="table-wrapper window-screen">
+        <div class="table-wrapper window-screen" id="windowScreen">
             <table>
                 <thead>
                 <tr>
                     <th>Window ID</th>
-                    <th>Window Name</th>
+                    <th>Window Category</th>
                     <th>Date Created</th>
                     <th>Active Status</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody id="windowTable"></tbody>
@@ -160,7 +137,12 @@
             <br>
             <label for="passwordConfirm">Re-enter Password:</label>
             <input type="password" id="passwordConfirm">
+            <br>
+            <label for="assignUserWindow">Select Window:</label>
+            <select id="assignUserWindow"></select>
+            <br>
             <input type="submit" id="createEmployeeSubmit" class="body-btn" onclick="createEmployee()"><br>
+            <button type="button" class="close body_btn" id="closeCreateBtn">Exit</button>
         </div>
     </div>
 
@@ -169,13 +151,15 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span id="closePass" class="close-pass-modal">&times;</span>
+            Changing Password For Employee: <span id="employeeNameReset"></span>
             <p>Please Enter New Password: </p>
             <label for="newPassInput">Enter new password here...: </label>
             <input type="password" id="newPassInput">
             <p>Confirm New Password: </p>
             <label for="confirmPassInput">Re-enter new password here...: </label>
             <input type="password" id="confirmPassInput">
-            <input type="submit" id="passSubmit" class="body-btn" onclick="changePassword()"><br>
+            <input type="submit" id="passSubmit" class="body-btn" onclick="resetPassword()"><br>
+            <button type="button" class="close body_btn" id="closePassBtn">Exit</button>
         </div>
     </div>
 
@@ -199,6 +183,7 @@
         </div>
     </div>
 
+    <!-- Delete Modal -->
     <div id="deleteEmployeeModal" class="delete-employee modal">
         <div class="modal-content">
             <p>Are you sure you want to delete the employee, <span id="employeeName"></span></p>
@@ -209,6 +194,8 @@
             <button type="button" class="close body_btn" id="closeDeleteBtn">NO</button>
         </div>
     </div>
+
+
 </div>
 
 <script src="auth.js"></script>
