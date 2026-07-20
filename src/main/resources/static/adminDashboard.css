@@ -1,7 +1,457 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(#F1F3FF, #CBD4FF);
+    color: #151A2D;
+}
+
+.body-sidebar {
+    position: relative;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 320px;
+    height: 100vh;
+    background: #151A2D;
+    transition: none;
+}
+body.sidebar-collapsed .sidebar,
+.sidebar.collapsed {
+    width: 85px;
+}
+.sidebar.animating {
+    transition: width 0.4s ease;
+}
+
+body.sidebar-collapsed .sidebar {
+    width: 85px;
+}
+
+.sidebar-header {
+    display: flex;
+    position: relative;
+    padding: 20px 16px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 90px;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: #EEF2FF;
+    min-width: 0;
+}
+
+.sidebar-brand-text .brand-line {
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-brand-text .brand-line-small {
+    font-size: 0.48rem;
+    letter-spacing: 0.02em;
+}
+
+.sidebar-brand-text .brand-line-main {
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.sidebar-brand-text .brand-line-strong {
+    font-size: 0.56rem;
+    font-weight: 700;
+}
+
+.sidebar-brand-text .brand-divider {
+    border: 0;
+    border-top: 1px solid rgba(238, 242, 255, 0.7);
+    margin: 2px 0;
+}
+
+.sidebar-header .BOC-logo img {
+    width: 46px;
+    height: 46px;
+    display: block;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.sidebar-header .sidebar-toggler,
+.sidebar-menu-button {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 35px;
+    width: 35px;
+    color: #151A2D;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    background: #EEF2FF;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+    z-index: 2;
+}
+
+.sidebar.collapsed .sidebar-header .sidebar-toggler {
+    right: 20px;
+    top: 86px;
+    transform: translateY(0);
+}
+
+.sidebar.collapsed .sidebar-brand-text {
+    display: none;
+}
+
+.sidebar-header .sidebar-toggler span,
+.sidebar-menu-button span {
+    font-size: 1.75rem;
+}
+
+.sidebar.collapsed .sidebar-header .sidebar-toggler span {
+    transform: rotate(180deg);
+}
+
+.sidebar-nav .nav-list {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    padding: 0 15px;
+    flex-direction: column;
+    transform: translateY(15px);
+}
+
+.sidebar .sidebar-nav .primary-nav {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-bottom: 20px;
+    height: calc(100vh - 227px);
+    scrollbar-color: transparent transparent;
+}
+.sidebar .sidebar-nav .primary-nav:hover {
+    scrollbar-color: #EEF2FF transparent;
+}
+.sidebar.collapsed .sidebar-nav .primary-nav {
+    overflow: unset;
+    transform: translateY(65px);
+}
+.sidebar .nav-link .nav-label {
+    transition: opacity 0.3s ease;
+}
+.sidebar.collapsed .nav-link :where(.nav-label, .dropdown-icon) {
+    opacity: 0;
+    pointer-events: none;
+}
+.sidebar.collapsed .nav-link .dropdown-icon {
+    transition: opacity 0.3s 0s ease;
+}
+
+/* Dropdown when collapsed: float to the right */
+.sidebar-nav .dropdown-menu {
+    height: 0;
+    overflow-y: hidden;
+    list-style: none;
+    padding-left: 15px;
+    transition: height 0.4s ease;
+}
+.sidebar.collapsed .dropdown-menu {
+    position: absolute;
+    top: -10px;
+    left: 100%;
+    opacity: 0;
+    height: auto !important;
+    padding-right: 10px;
+    overflow-y: unset;
+    pointer-events: none;
+    border-radius: 0 10px 10px 0;
+    background: #151A2D;
+    transition: 0s;
+}
+.sidebar.collapsed .dropdown-menu:has(.dropdown-link) {
+    padding: 7px 10px 7px 24px;
+}
+.sidebar.sidebar.collapsed .nav-item:hover>.dropdown-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(12px);
+    transition: all 0.4s ease;
+}
+.sidebar.sidebar.collapsed .nav-item:hover>.dropdown-menu:has(.dropdown-link) {
+    transform: translateY(10px);
+}
+.dropdown-menu .nav-item .nav-link {
+    color: #F1F4FF;
+    padding: 9px 15px;
+}
+.sidebar.collapsed .dropdown-menu .nav-link {
+    padding: 7px 15px;
+}
+.dropdown-menu .nav-item .nav-link.dropdown-title {
+    display: none;
+    color: #fff;
+    padding: 9px 15px;
+}
+.dropdown-menu:has(.dropdown-link) .nav-item .dropdown-title {
+    font-weight: 500;
+    padding: 7px 15px;
+}
+.sidebar.collapsed .dropdown-menu .nav-item .dropdown-title {
+    display: block;
+}
+
+.sidebar-nav .nav-link {
+    color: #fff;
+    display: flex;
+    gap: 12px;
+    white-space: nowrap;
+    border-radius: 8px;
+    padding: 11px 15px;
+    align-items: center;
+    text-decoration: none;
+    border: 1px solid #151A2D;
+    transition: 0.3s ease;
+}
+
+.sidebar-nav .nav-item:hover > .nav-link,
+.sidebar-nav .nav-item .nav-link:hover {
+    color: #151A2D;
+    background: #EEF2FF;
+}
+
+.screen-stage {
+    margin-left: 320px;
+    padding: 24px;
+    min-height: 100vh;
+}
+
+body.sidebar-collapsed .screen-stage {
+    margin-left: 85px;
+}
+
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto 24px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #151A2D;
+}
+
 .employee-screen {
     display: block;
 }
 
 .window-screen {
     display: none;
+}
+
+.table-wrapper {
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(21, 26, 45, 0.12);
+    border: 1px solid rgba(21, 26, 45, 0.08);
+}
+
+.table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-wrapper th {
+    background: #f3f4f6;
+    color: #151A2D;
+    font-weight: 600;
+    padding: 14px 12px;
+    text-align: left;
+}
+
+.table-wrapper td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-wrapper tbody tr:nth-child(odd) {
+    background-color: #fef2f2;
+}
+
+.table-wrapper tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.body-btn,
+button,
+input[type="submit"],
+input[type="button"] {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #151A2D, #2b3557);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.body-btn:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(21, 26, 45, 0.15);
+}
+
+/* Modals */
+.create-employee,
+.change-pass,
+.delete-employee,
+.edit-employee {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(21, 26, 45, 0.45);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 40px 20px 20px;
+}
+
+.create-employee.show,
+.change-pass.show,
+.delete-employee.show,
+.edit-employee.show {
+    display: flex;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    width: min(100%, 480px);
+    box-shadow: 0 16px 40px rgba(21, 26, 45, 0.22);
+    border: 1px solid rgba(21, 26, 45, 0.08);
+}
+
+.modal-content p,
+.modal-content label,
+.modal-content i {
+    display: block;
+    margin-bottom: 8px;
+    color: #151A2D;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+/* Make modal action buttons (submit and exit) match size */
+.modal-content .body-btn,
+.modal-content .body_btn,
+.modal-content input[type="submit"],
+.modal-content button.body_btn,
+.modal-content .close.body_btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    padding: 12px 14px;
+    margin-top: 8px;
+}
+
+.modal-content .close {
+    float: right;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.modal-content .close:hover {
+    color: #151A2D;
+}
+
+/* When the close control is used as a full-width modal exit button, reset its styles
+   so it matches the regular modal action buttons */
+.modal-content .close.body_btn,
+.modal-content button.close.body_btn {
+    float: none;
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #151A2D, #2b3557);
+    border: none;
+    width: 100%;
+    display: block;
+    padding: 12px 14px;
+    margin-top: 8px;
+    border-radius: 10px;
+    text-align: center;
+}
+.modal-content .close.body_btn:hover,
+.modal-content button.close.body_btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(21, 26, 45, 0.15);
+}
+
+@media (max-width: 768px) {
+    .screen-stage {
+        margin-left: 0;
+        padding: 80px 20px 20px;
+    }
+
+    .sidebar {
+        width: 270px;
+        left: -270px;
+    }
+
+    body.sidebar-collapsed .sidebar {
+        width: 270px;
+        left: -270px;
+    }
+
+    .sidebar-menu-button {
+        position: fixed;
+        left: 20px;
+        top: 20px;
+        height: 40px;
+        width: 42px;
+        display: flex;
+        color: #F1F4FF;
+        background: #151A2D;
+    }
 }
