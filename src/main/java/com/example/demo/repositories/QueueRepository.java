@@ -2,6 +2,7 @@ package com.example.demo.repositories;
 
 import com.example.demo.models.Queue;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -46,4 +47,15 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
 
     @Query(value = "SELECT * FROM queue WHERE status = 'SERVING' AND is_active = true ORDER BY time_stamp ASC", nativeQuery = true)
     List<Queue> findAllServing();
+
+    @Modifying
+    @Query(value = "UPDATE users SET is_active = false \n" +
+            "WHERE user_id IN (\n" +
+            "    SELECT user_id FROM queue WHERE is_active = true AND status IN ('WAITING', 'SERVING')\n" +
+            ")", nativeQuery = true)
+    void expireStaleUsers();
+
+    @Modifying
+    @Query(value = "UPDATE queue SET status = 'QUEUE_EXPIRED', is_active = false WHERE is_active = true AND status IN ('WAITING', 'SERVING')", nativeQuery = true)
+    void expireStaleQueues();
 }
