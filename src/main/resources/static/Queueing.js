@@ -3,6 +3,7 @@ let selectedStatus = "";
 let selectedCategory = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
+let selectedOffice = "";
 
 function showScreen(screenId, addToHistory = true) {
     const screens = [
@@ -44,6 +45,7 @@ function resetFlow() {
     selectedCategory = "";
     screenHistory = [];
     currentScreen = "startScreen";
+    selectedOffice = "";
 
     const nameInput = document.getElementById("nameInput");
     if (nameInput) {
@@ -108,7 +110,8 @@ document.getElementById("appoint")?.addEventListener("click", function() {
 
 // hide appointments, show name
 document.getElementById("appointSubmit")?.addEventListener("click", function() {
-    selectedCategory = document.getElementById("officeSelect").value;
+    selectedCategory = "Appointment";
+    selectedOffice = document.getElementById("officeSelect").value;
     showScreen("nameScreen");
 });
 
@@ -139,7 +142,9 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
     fetch("https://localhost:8443/window")
         .then(response => response.json())
         .then(windows => {
+            console.log("windows:", windows);
             const matchedWindow = windows.find(window => window.category === selectedCategory);
+            console.log("matchedWindow:", matchedWindow);
             return fetch("https://localhost:8443/users", {
                 method: "POST",
                 headers: {
@@ -148,7 +153,8 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 body: JSON.stringify({
                     name: personName,
                     consignee: consigneeName,
-                    priority: selectedStatus
+                    priority: selectedStatus,
+                    office: selectedOffice
                 })
             })
                 .then(response => {
