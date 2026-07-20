@@ -178,8 +178,40 @@
             <input type="submit" id="passSubmit" class="body-btn" onclick="changePassword()"><br>
         </div>
     </div>
+
+    <!-- Edit Employee Modal -->
+    <div id="editEmployeeModal" class="edit-employee modal">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <p>Edit Employee</p>
+            <i>Leave Blank For No Changes</i>
+            <label for="editNameInput">New name: </label>
+            <input type="text" id="editNameInput">
+            <br>
+            <label for="editEmailInput">New email: </label>
+            <input type="text" id="editEmailInput">
+            <br>
+            <label for="editWindowInput">New window</label>
+            <select id="editWindowInput"></select>
+            <br>
+            <input type="submit" id="editEmployeeSubmit" class="body-btn" onclick="saveEmployeeEdit()">
+            <button type="button" class="close body_btn" id="closeEditBtn">Exit</button>
+        </div>
+    </div>
+
+    <div id="deleteEmployeeModal" class="delete-employee modal">
+        <div class="modal-content">
+            <p>Are you sure you want to delete the employee, <span id="employeeName"></span></p>
+            <br>
+            <button type="button" class="body_btn" id="deleteEmployeeBtn" onclick="confirmDeleteEmployee()">
+                YES
+            </button>
+            <button type="button" class="close body_btn" id="closeDeleteBtn">NO</button>
+        </div>
+    </div>
 </div>
 
+<script src="auth.js"></script>
 <script src="adminDashboard.js"></script>
 </body>
 </html>
