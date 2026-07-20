@@ -45,9 +45,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/queue").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/employee/*/admin-reset-password").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/employee/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
+                // Just worth being aware of for future additions
+                // Spring Security rule ordering bugs are a common source of
+                // "why can employees suddenly do X" surprises.
             .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
