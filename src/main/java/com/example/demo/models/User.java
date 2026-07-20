@@ -24,6 +24,8 @@ public class User {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    private String office;
+
     public Integer getUserId() {
         return userId;
     }
@@ -70,5 +72,13 @@ public class User {
 
     public void setConsignee(String consignee) {
         this.consignee = consignee;
+    }
+
+    public String getOffice() {
+        return office;
+    }
+
+    public void setOffice(String office) {
+        this.office = office;
     }
 }
