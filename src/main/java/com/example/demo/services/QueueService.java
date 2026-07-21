@@ -19,6 +19,10 @@ import java.util.Optional;
 @Service
 public class QueueService {
 
+    // Core queue workflow service.
+    // This class manages the state of each queue entry as customers move through
+    // waiting, serving, transfer, completion, and no-response stages.
+
     private final QueueRepository queueRepository;
     private final WindowRepository windowRepository;
 
@@ -52,6 +56,7 @@ public class QueueService {
         return queueRepository.findByIsActiveTrueAndWindowIdAndStatus(windowId, "SERVING");
     }
 
+    // Create a new queue entry with the default waiting state and timestamp.
     public Queue createQueue(Queue queue) {
         queue.setTimeStamp(LocalDateTime.now());
         queue.setStatus("WAITING");
@@ -59,6 +64,7 @@ public class QueueService {
         return queueRepository.save(queue);
     }
 
+    // Update the queue entry state as the customer moves through the service process.
     public Queue updateQueue(Integer id, Queue updatedQueue) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
@@ -138,6 +144,7 @@ public class QueueService {
         return queueRepository.priorityQueue(windowId);
     }
 
+    // Reinsert a client into the queue after a missed or repeated call attempt.
     public Queue requeueEntry(Integer id) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
@@ -166,6 +173,7 @@ public class QueueService {
         return allowedDestinations != null && allowedDestinations.contains(destinationCategory);
     }
 
+    // Scheduled cleanup job that runs at midnight to expire stale queue records.
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void expireStaleQueueEntries() {

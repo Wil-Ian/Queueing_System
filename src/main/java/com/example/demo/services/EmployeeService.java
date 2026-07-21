@@ -14,6 +14,9 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
+
+    // Service layer for employee account management.
+    // This class handles creation, updates, password changes, and soft deletion.
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -27,6 +30,7 @@ public class EmployeeService {
         return employeeRepository.findByIsActiveTrue();
     }
 
+    // Create a new employee and ensure the account is assigned to a valid window.
     public Employee createEmployee(Employee employee) {
         if(employee.getWindow() == null) {
             throw new InvalidOperationException("Employee is not assigned a window.", "EMPLOYEE_NO_WINDOW");
@@ -37,6 +41,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
+    // Update employee profile fields while preserving the existing account state.
     public Employee updateEmployee(Integer id, Employee updatedEmployee) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {
@@ -83,6 +88,7 @@ public class EmployeeService {
         throw new ResourceNotFoundException("Employee with ID " + id + " not found");
     }
 
+    // Change an employee password after verifying the current password.
     public Employee patchEmployeePassword(Integer id, String password, String newPassword) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {
@@ -99,6 +105,7 @@ public class EmployeeService {
         }
     }
 
+    // Allow an admin to reset an employee password without knowing the old one.
     public void adminResetPassword(Integer id, String newPassword) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {

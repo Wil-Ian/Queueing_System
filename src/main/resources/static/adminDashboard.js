@@ -1,3 +1,6 @@
+// Admin dashboard logic.
+// This script manages employee records, window assignments, and password resets
+// for the system administrator.
 let editingEmployeeId;
 let deletingEmployeeId;
 let resettingEmployeeId;
@@ -5,6 +8,8 @@ let employees = [];
 let windows = [];
 
 function loadEmployees() {
+    // Load the initial employee and window data from the API before rendering
+    // the tables and modals that depend on them.
     if (!localStorage.getItem('accessToken')) {
         window.location.href = "loginScreen.html";
         return;
@@ -142,6 +147,7 @@ function setupEventListeners() {
 window.addEventListener("load", setupEventListeners);
 
 function saveEmployeeEdit() {
+    // Update an existing employee's visible details and assigned window.
     const editNameInput = document.getElementById("editNameInput").value;
     const editEmailInput = document.getElementById("editEmailInput").value;
     const editWindowInput = document.getElementById("editWindowInput").value;
@@ -287,6 +293,7 @@ function showCreateEmployeeModal() {
 }
 
 function createEmployee() {
+    // Create a new employee account and assign it to a valid window.
     const userNameInput = document.getElementById("userNameInput").value;
     const emailInput = document.getElementById("emailInput").value;
     const passwordInput = document.getElementById("passwordInput");
@@ -338,6 +345,8 @@ function createEmployee() {
 }
 
 function renderWindowTable() {
+    // Render the window inventory so administrators can verify which services
+    // are available and which windows are currently active.
     const windowTable = document.getElementById("windowTable");
     windowTable.innerHTML = "";
 

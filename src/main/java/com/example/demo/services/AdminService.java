@@ -13,6 +13,9 @@ import java.util.Optional;
 
 @Service
 public class AdminService {
+
+    // Service layer for administrator account management.
+    // These methods keep admin accounts secure and prevent unsafe deletion.
     private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -26,12 +29,14 @@ public class AdminService {
         return adminRepository.findByIsActiveTrue();
     }
 
+    // Create a new admin account with a hashed password.
     public Admin createAdmin(Admin admin) {
         String hashedPassword = passwordEncoder.encode(admin.getPassword());
         admin.setPassword(hashedPassword);
         return adminRepository.save(admin);
     }
 
+    // Update editable admin profile fields without changing the password.
     public Admin updateAdmin(Integer id, Admin updatedAdmin) {
         Optional<Admin> existingAdmin = adminRepository.findById(id);
         if(existingAdmin.isPresent()) {
@@ -43,6 +48,7 @@ public class AdminService {
         throw new ResourceNotFoundException("Admin with ID " + id + " not found");
     }
 
+    // Soft-delete an admin only when another active admin remains available.
     public void deleteAdmin(Integer id) {
         List<Admin> activeAdmins = adminRepository.findByIsActiveTrue();
         if(activeAdmins.size() > 1) {

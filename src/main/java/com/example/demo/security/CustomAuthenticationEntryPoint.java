@@ -11,6 +11,9 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    // Handles unauthenticated access to protected endpoints.
+    // This class returns a 401 Unauthorized response when the request lacks a valid token.
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

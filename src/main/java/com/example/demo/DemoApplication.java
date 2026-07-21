@@ -8,9 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class DemoApplication {
 
-    // spring.jpa.open-in-view is enabled during development phase and can be
-	// turned off after deployment to improve performance
-	public static void main(String[] args) {
+    // Entry point for the Spring Boot application.
+    // Scheduling is enabled here because the queue service uses background jobs
+    // to expire stale queue records at midnight.
+    public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 }

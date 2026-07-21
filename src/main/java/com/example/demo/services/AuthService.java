@@ -18,6 +18,9 @@ import java.util.Optional;
 
 @Service
 public class AuthService {
+
+    // Authentication service for staff and admin login flows.
+    // This class issues JWT tokens, refreshes sessions, and invalidates tokens on logout.
     private final AdminRepository adminRepository;
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -33,6 +36,7 @@ public class AuthService {
         this.blacklistedTokensRepository = blacklistedTokensRepository;
     }
 
+    // Authenticate a user by email and password, then return the correct role-based token pair.
     public AuthResponse login(String email, String password) {
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
         Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
@@ -63,6 +67,7 @@ public class AuthService {
         }
     }
 
+    // Issue a new access token from a refresh token without forcing the user to log in again.
     public AuthResponse refresh(String refreshToken) {
         String email = util.extractEmail(refreshToken);
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
@@ -80,6 +85,7 @@ public class AuthService {
         }
     }
 
+    // Blacklist the current token so it cannot be reused after logout.
     public void logout(String token) {
         String jti = util.extractJti(token);
 

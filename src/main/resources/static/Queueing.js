@@ -1,9 +1,10 @@
-// init as global var
+// Public queueing flow for visitors.
+// This script controls the multi-step screen flow and stores the user choices
+// that are later submitted to the backend queueing services.
 let selectedStatus = "";
 let selectedCategory = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
-let selectedOffice = "";
 
 function showScreen(screenId, addToHistory = true) {
     const screens = [
@@ -45,7 +46,6 @@ function resetFlow() {
     selectedCategory = "";
     screenHistory = [];
     currentScreen = "startScreen";
-    selectedOffice = "";
 
     const nameInput = document.getElementById("nameInput");
     if (nameInput) {
@@ -63,38 +63,53 @@ function resetFlow() {
     }
 }
 
+function openPriorityModal() {
+    document.getElementById("priorityModal")?.classList.add("active");
+}
+
+function closePriorityModal() {
+    document.getElementById("priorityModal")?.classList.remove("active");
+}
+
 // hide start, show priority
 document.querySelector(".start_btn")?.addEventListener("click", function() {
     showScreen("priorityScreen");
 });
 
 // hide priority, show category
-
-document.getElementById("reg").onclick = function() {
-    selectedStatus = "REGULAR";
-    showScreen("categoryScreen");
+const regularButton = document.getElementById("reg");
+if (regularButton) {
+    regularButton.addEventListener("click", function() {
+        selectedStatus = regularButton.value;
+        showScreen("categoryScreen");
+    });
 }
 
-function openPriorityModal() {
-    document.getElementById("priorityModal").style.display = "block";
+const priorityModalTrigger = document.getElementById("prioModal");
+if (priorityModalTrigger) {
+    priorityModalTrigger.addEventListener("click", function() {
+        openPriorityModal();
+    });
 }
 
-document.getElementById("prioModal").onclick = function() {
-    openPriorityModal();
+const closePriorityModalButton = document.getElementById("closeModal");
+if (closePriorityModalButton) {
+    closePriorityModalButton.addEventListener("click", function() {
+        closePriorityModal();
+    });
 }
 
-document.getElementById("prio").onclick = function() {
-    document.getElementById("priorityModal").style.display = "none";
-    selectedStatus = "PRIORITY";
-    showScreen("categoryScreen");
+const confirmPriorityButton = document.getElementById("prio");
+if (confirmPriorityButton) {
+    confirmPriorityButton.addEventListener("click", function() {
+        selectedStatus = confirmPriorityButton.value;
+        closePriorityModal();
+        showScreen("categoryScreen");
+    });
 }
 
-document.getElementById("closeModal").onclick = function() {
-    document.getElementById("priorityModal").style.display = "none";
-}
-
-
-// hide category, show name
+// Category selection is stored here so the later submission step knows which
+// window category the visitor selected.
 const buttonCategory = document.querySelectorAll(".category_btn");
 buttonCategory.forEach(button => {
     button.addEventListener("click", function() {
@@ -110,8 +125,7 @@ document.getElementById("appoint")?.addEventListener("click", function() {
 
 // hide appointments, show name
 document.getElementById("appointSubmit")?.addEventListener("click", function() {
-    selectedCategory = "Appointment";
-    selectedOffice = document.getElementById("officeSelect").value;
+    selectedCategory = document.getElementById("officeSelect").value;
     showScreen("nameScreen");
 });
 
@@ -126,25 +140,20 @@ document.getElementById("resultSubmit")?.addEventListener("click", function() {
     showScreen("startScreen", false);
 });
 
-// fetch window
+// Final submission step:
+// 1. Resolve the matching window category.
+// 2. Create the user record.
+// 3. Add the user to the queue.
 document.getElementById("nameSubmit").addEventListener("click", function() {
     const personName = document.getElementById("nameInput").value.trim();
     const consigneeName = document.getElementById("consigneeInput").value.trim();
-
-    const regex = /^[a-zA-Z ]+$/;
-    if(!regex.test(personName )) {
-        alert("Please use upper and lowercase letters only.");
-        return;
-    }
 
     setLoading(true);
 
     fetch("https://localhost:8443/window")
         .then(response => response.json())
         .then(windows => {
-            console.log("windows:", windows);
             const matchedWindow = windows.find(window => window.category === selectedCategory);
-            console.log("matchedWindow:", matchedWindow);
             return fetch("https://localhost:8443/users", {
                 method: "POST",
                 headers: {
@@ -153,8 +162,7 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 body: JSON.stringify({
                     name: personName,
                     consignee: consigneeName,
-                    priority: selectedStatus,
-                    office: selectedOffice
+                    priority: selectedStatus
                 })
             })
                 .then(response => {

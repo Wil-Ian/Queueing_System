@@ -1,3 +1,5 @@
+// Monitor display script.
+// This file refreshes the visible queue data and announces the next person being served.
 let previousServingIds = new Set();
 
 function updateClock() {
@@ -25,6 +27,8 @@ function updateClock() {
 }
 
 function loadQueue() {
+    // Pull all windows, the full queue, and the currently serving entries so the
+    // monitor can display the latest status without needing a page refresh.
     const queueFetch = Promise.all([
         fetch(`https://localhost:8443/window`, {
             headers: {
@@ -141,6 +145,7 @@ function escapeHtml(text) {
 }
 
 function speakText(input) {
+    // Call the local audio service to announce the next customer verbally.
     fetch("http://localhost:8880/v1/audio/speech", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

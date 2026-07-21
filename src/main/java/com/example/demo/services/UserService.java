@@ -16,6 +16,9 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    // Service layer for visitor/user records.
+    // These methods handle user creation, duplicate checks, and soft deletion.
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -27,6 +30,7 @@ public class UserService {
         return userRepository.findByIsActiveTrue();
     }
 
+    // Create a new user record and reject duplicate active names.
     public User createUser(User user) {
         boolean existActiveUser = userRepository.existsByNameAndIsActiveTrue(user.getName());
         if(existActiveUser) {
@@ -37,6 +41,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // Update a user record within a transaction so the change remains atomic.
     @Transactional
     public User updateUser(Integer id, User updatedUser) {
         User user = userRepository.findById(id)

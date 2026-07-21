@@ -17,6 +17,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+    // Central security configuration for the application.
+    // This class defines which endpoints are public, which require authentication,
+    // and which roles are allowed to access protected resources.
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -14,16 +14,21 @@ import java.util.UUID;
 
 @Component
 public class JwtUtil {
+
+    // Utility class for creating and validating JWTs used by the authentication flow.
+    // The token contains the user's email, role, and a unique identifier for logout handling.
     private SecretKey key;
 
     @Value("${jwt.secret}")
     private String secretString;
 
+    // Initialize the signing key once the application has loaded its secret configuration.
     @PostConstruct
     public void init() {
         key = Keys.hmacShaKeyFor(secretString.getBytes());
     }
 
+    // Create an access token that is valid for one hour and includes the user's role.
     public String generateToken(String email, String role) {
         String jti = UUID.randomUUID().toString();
         return Jwts.builder()
@@ -36,6 +41,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // Create a longer-lived refresh token so the user can obtain a new access token.
     public String generateRefreshToken(String email) {
         return Jwts.builder()
                 .subject(email)
@@ -45,6 +51,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // Parse and verify the signed JWT payload before reading its claims.
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key)
@@ -65,6 +72,7 @@ public class JwtUtil {
         return extractClaims(token).get("jti", String.class);
     }
 
+    // Return true when the token is structurally valid and has not expired.
     public boolean isTokenValid(String token) {
         try {
             extractClaims(token);

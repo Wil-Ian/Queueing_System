@@ -1,3 +1,6 @@
+// Receiving window dashboard logic.
+// This script keeps track of the logged-in employee, their assigned window,
+// and the current queue state so the staff can serve, transfer, or requeue clients.
 let currentServingId = null;
 let currentWindowId = null;
 let currentEmployeeId = null;
@@ -19,6 +22,8 @@ const transferButtons = [
 ];
 
 function loadDashboard() {
+    // Load the current employee profile first so the dashboard knows which window
+    // and category this operator is responsible for.
     if (!localStorage.getItem('accessToken')) {
         window.location.href = "loginScreen.html";
         return;
@@ -196,6 +201,7 @@ function setupEventListeners() {
 window.addEventListener("load", setupEventListeners);
 
 function requeueUser(queueId) {
+    // Put a previously skipped or missed client back into the queue.
     authFetch(`https://localhost:8443/queue/${queueId}/requeue`, {
         method: "PUT"
     })
@@ -250,6 +256,7 @@ function completeUser(currentServingId) {
 }
 
 function nextUser() {
+    // Pull the next eligible client from the queue and mark them as currently serving.
     authFetch(`https://localhost:8443/queue/next-person?windowId=${currentWindowId}`, {
         method: "GET"
     })
@@ -296,6 +303,8 @@ function nextUser() {
 }
 
 function openTransferModal() {
+    // Show the transfer options and enable only the buttons that are valid for
+    // the current employee's category.
     document.getElementById("transferModal").style.display = "block";
     authFetch(`https://localhost:8443/window`, {
         method: "GET"

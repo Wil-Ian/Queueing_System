@@ -12,6 +12,9 @@ import java.util.Optional;
 @Service
 public class WindowService {
 
+    // Service layer for window management.
+    // These methods control which service windows are visible and active in the system.
+
     private final WindowRepository windowRepository;
 
     @Autowired
@@ -19,6 +22,7 @@ public class WindowService {
         this.windowRepository = windowRepository;
     }
 
+    // Return only windows that are currently active for the UI and queue workflow.
     public List<Window> getAllWindows() {
         return windowRepository.findByIsActiveTrue();
     }
@@ -27,6 +31,7 @@ public class WindowService {
         return windowRepository.save(window);
     }
 
+    // Update an existing window record without deleting it from the database.
     public Window updateWindow(Integer id, Window updatedWindow) {
         Optional<Window> exisingWindow = windowRepository.findById(id);
         if(exisingWindow.isPresent()) {
@@ -37,6 +42,7 @@ public class WindowService {
         throw new ResourceNotFoundException("Window with ID " + id + " not found");
     }
 
+    // Deactivate a window instead of removing it permanently so existing history stays intact.
     public void deleteWindow(Integer id) {
         Optional<Window> existingWindow = windowRepository.findById(id);
         if(existingWindow.isPresent()) {
