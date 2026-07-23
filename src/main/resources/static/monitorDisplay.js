@@ -30,17 +30,17 @@ function loadQueue() {
     // Pull all windows, the full queue, and the currently serving entries so the
     // monitor can display the latest status without needing a page refresh.
     const queueFetch = Promise.all([
-        fetch(`https://localhost:8443/window`, {
+        fetch(`/window`, {
             headers: {
                 "Content-Type": "application/json"
             }
         }),
-        fetch(`https://localhost:8443/queue/all-queue`, {
+        fetch(`/queue/all-queue`, {
             headers: {
                 "Content-Type": "application/json"
             }
         }),
-        fetch(`https://localhost:8443/queue/all-serving`, {
+        fetch(`/queue/all-serving`, {
             headers: {
                 "Content-Type": "application/json"
             }

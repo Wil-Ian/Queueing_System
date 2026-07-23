@@ -11,7 +11,7 @@ function authFetch(url, options) {
         .then(response => {
             if (response.status === 401) {
                 const refreshToken = localStorage.getItem('refreshToken');
-                return fetch("https://localhost:8443/auth/refresh", {
+                return fetch("/auth/refresh", {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${refreshToken}`,
@@ -43,7 +43,7 @@ function authFetch(url, options) {
 
 
 function logout() {
-    authFetch(`https://localhost:8443/auth/logout`, {
+    authFetch(`/auth/logout`, {
         method: "POST"
     })
         .then(response => {

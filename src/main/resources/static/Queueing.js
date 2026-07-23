@@ -150,11 +150,11 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
 
     setLoading(true);
 
-    fetch("https://localhost:8443/window")
+    fetch("/window")
         .then(response => response.json())
         .then(windows => {
             const matchedWindow = windows.find(window => window.category === selectedCategory);
-            return fetch("https://localhost:8443/users", {
+            return fetch("/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -176,7 +176,7 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                     });
                 })
                 .then(createdUser => {
-                    return fetch("https://localhost:8443/queue", {
+                    return fetch("/queue", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"

@@ -28,7 +28,7 @@ function loadDashboard() {
         window.location.href = "loginScreen.html";
         return;
     }
-    authFetch("https://localhost:8443/employee/me", {})
+    authFetch("/employee/me", {})
         .then(response => response.json())
         .then(employee => {
             const windowId = employee.window.windowId;
@@ -49,19 +49,19 @@ function loadDashboard() {
             }
 
             const mainFetch = Promise.all([
-                authFetch(`https://localhost:8443/queue/window-queue?windowId=${windowId}`, {
+                authFetch(`/queue/window-queue?windowId=${windowId}`, {
                     method: "GET"
                 }),
-                authFetch(`https://localhost:8443/queue/reports/queue-count?windowId=${windowId}`, {
+                authFetch(`/queue/reports/queue-count?windowId=${windowId}`, {
                     method: "GET"
                 }),
-                authFetch(`https://localhost:8443/queue/reports/missed-count?windowId=${windowId}`, {
+                authFetch(`/queue/reports/missed-count?windowId=${windowId}`, {
                     method: "GET"
                 }),
-                authFetch(`https://localhost:8443/queue/reports/daily-volume?windowId=${windowId}`, {
+                authFetch(`/queue/reports/daily-volume?windowId=${windowId}`, {
                     method: "GET"
                 }),
-                authFetch(`https://localhost:8443/queue/reports/transfer-count?transferredFrom=${windowId}`, {
+                authFetch(`/queue/reports/transfer-count?transferredFrom=${windowId}`, {
                     method: "GET"
                 })
             ]).then(responses => {
@@ -112,7 +112,7 @@ function loadDashboard() {
                         totalReferred.innerHTML = transferCount;
                     }
                 })
-            authFetch(`https://localhost:8443/queue/live-status?windowId=${windowId}`, {
+            authFetch(`/queue/live-status?windowId=${windowId}`, {
                 method: "GET",
             })
                 .then(response => {
@@ -202,7 +202,7 @@ window.addEventListener("load", setupEventListeners);
 
 function requeueUser(queueId) {
     // Put a previously skipped or missed client back into the queue.
-    authFetch(`https://localhost:8443/queue/${queueId}/requeue`, {
+    authFetch(`/queue/${queueId}/requeue`, {
         method: "PUT"
     })
         .then(response => {
@@ -226,7 +226,7 @@ function requeueUser(queueId) {
 }
 
 function completeUser(currentServingId) {
-    authFetch(`https://localhost:8443/queue/${currentServingId}`, {
+    authFetch(`/queue/${currentServingId}`, {
         method: "PUT",
         body: JSON.stringify({
             status: "COMPLETED",
@@ -257,7 +257,7 @@ function completeUser(currentServingId) {
 
 function nextUser() {
     // Pull the next eligible client from the queue and mark them as currently serving.
-    authFetch(`https://localhost:8443/queue/next-person?windowId=${currentWindowId}`, {
+    authFetch(`/queue/next-person?windowId=${currentWindowId}`, {
         method: "GET"
     })
         .then(response => {
@@ -269,7 +269,7 @@ function nextUser() {
         })
         .then(queue => {
             if(queue) {
-                authFetch(`https://localhost:8443/queue/${queue.queueId}`, {
+                authFetch(`/queue/${queue.queueId}`, {
                     method: "PUT",
                     body: JSON.stringify({
                         status: "SERVING",
@@ -306,7 +306,7 @@ function openTransferModal() {
     // Show the transfer options and enable only the buttons that are valid for
     // the current employee's category.
     document.getElementById("transferModal").style.display = "block";
-    authFetch(`https://localhost:8443/window`, {
+    authFetch(`/window`, {
         method: "GET"
     })
         .then(response => response.json())
@@ -343,7 +343,7 @@ function transferUser(windowId) {
     const confirmed = confirm("Are you sure you want to transfer this client?");
     console.log("Transferring queue ID:", currentServingId, "to window:", windowId, "with status: TRANSFERRED");
     if (confirmed) {
-        authFetch(`https://localhost:8443/queue/${currentServingId}`, {
+        authFetch(`/queue/${currentServingId}`, {
             method: "PUT",
             body: JSON.stringify({
                 status: "TRANSFERRED",
@@ -443,10 +443,10 @@ function loadAnalytics() {
         return;
     }
     const analyticsFetch = Promise.all([
-        authFetch(`https://localhost:8443/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
+        authFetch(`/queue/reports/avg-waiting-time?windowId=${currentWindowId}`, {
             method: "GET"
         }),
-        authFetch(`https://localhost:8443/queue/reports/avg-service-time?windowId=${currentWindowId}`, {
+        authFetch(`/queue/reports/avg-service-time?windowId=${currentWindowId}`, {
             method: "GET"
         })
     ])
@@ -480,7 +480,7 @@ function loadHistory() {
         window.location.href = "loginScreen.html";
         return;
     }
-    authFetch(`https://localhost:8443/queue/finished-queue?windowId=${currentWindowId}`, {
+    authFetch(`/queue/finished-queue?windowId=${currentWindowId}`, {
         method: "GET"
     })
         .then(response => {
@@ -521,7 +521,7 @@ function loadHistory() {
 
 function changeUsername() {
     const userNameInput = document.getElementById("userNameInput");
-    authFetch(`https://localhost:8443/employee/${currentEmployeeId}/name`, {
+    authFetch(`/employee/${currentEmployeeId}/name`, {
         method: "PATCH",
         body: JSON.stringify(userNameInput.value)
     })
@@ -549,7 +549,7 @@ function changePassword() {
     const confirmPassInput = document.getElementById("confirmPassInput");
 
     if(newPassInput.value === confirmPassInput.value) {
-        authFetch(`https://localhost:8443/employee/${currentEmployeeId}/password`, {
+        authFetch(`/employee/${currentEmployeeId}/password`, {
             method: "PATCH",
             body: JSON.stringify({
                 currentPassword: passInput.value,

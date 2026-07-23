@@ -16,10 +16,10 @@ function loadEmployees() {
     }
 
     const employeeFetch = Promise.all([
-        authFetch(`https://localhost:8443/employee`, {
+        authFetch(`/employee`, {
             method: "GET"
         }),
-        authFetch(`https://localhost:8443/window`, {
+        authFetch(`/window`, {
             method: "GET"
         })
     ]).then(responses => {
@@ -160,7 +160,7 @@ function saveEmployeeEdit() {
         }
     }
 
-    authFetch(`https://localhost:8443/employee/${editingEmployeeId}`, {
+    authFetch(`/employee/${editingEmployeeId}`, {
         method: "PUT",
         body: JSON.stringify(body)
     })
@@ -202,7 +202,7 @@ function openDeleteModal(employeeId) {
 }
 
 function confirmDeleteEmployee() {
-    authFetch(`https://localhost:8443/employee/${deletingEmployeeId}`, {
+    authFetch(`/employee/${deletingEmployeeId}`, {
         method: "DELETE"
     })
         .then(response => {
@@ -246,7 +246,7 @@ function resetPassword() {
     const confirmPassInput = document.getElementById("confirmPassInput");
 
     if(newPassInput.value === confirmPassInput.value) {
-        authFetch(`https://localhost:8443/employee/${resettingEmployeeId}/admin-reset-password`, {
+        authFetch(`/employee/${resettingEmployeeId}/admin-reset-password`, {
             method: "PATCH",
             body: JSON.stringify({
                 newPassword: newPassInput.value
@@ -319,7 +319,7 @@ function createEmployee() {
         }
     }
 
-    authFetch(`https://localhost:8443/employee`, {
+    authFetch(`/employee`, {
         method: "POST",
         body: JSON.stringify(body)
     })
