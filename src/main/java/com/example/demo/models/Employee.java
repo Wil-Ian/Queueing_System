@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class Employee extends Person{
     private Window window;
 
     @Column(name = "is_active")
+    @JsonProperty("isActive")
     private Boolean isActive;
 
     public Integer getEmployeeId() {
