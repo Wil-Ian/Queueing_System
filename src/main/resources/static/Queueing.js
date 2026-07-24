@@ -3,6 +3,7 @@
 // that are later submitted to the backend queueing services.
 let selectedStatus = "";
 let selectedCategory = "";
+let selectedOffice = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
 
@@ -44,6 +45,7 @@ function setLoading(isLoading) {
 function resetFlow() {
     selectedStatus = "";
     selectedCategory = "";
+    selectedOffice = "";
     screenHistory = [];
     currentScreen = "startScreen";
 
@@ -125,7 +127,8 @@ document.getElementById("appoint")?.addEventListener("click", function() {
 
 // hide appointments, show name
 document.getElementById("appointSubmit")?.addEventListener("click", function() {
-    selectedCategory = document.getElementById("officeSelect").value;
+    selectedOffice = document.getElementById("officeSelect").value;
+    selectedCategory = "Appointment";
     showScreen("nameScreen");
 });
 
@@ -162,7 +165,8 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 body: JSON.stringify({
                     name: personName,
                     consignee: consigneeName,
-                    priority: selectedStatus
+                    priority: selectedStatus,
+                    office: selectedOffice
                 })
             })
                 .then(response => {
