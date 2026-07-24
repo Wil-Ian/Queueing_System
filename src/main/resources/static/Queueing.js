@@ -6,7 +6,6 @@ let selectedCategory = "";
 let selectedOffice = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
-
 function showScreen(screenId, addToHistory = true) {
     const screens = [
         "startScreen",
@@ -14,7 +13,11 @@ function showScreen(screenId, addToHistory = true) {
         "categoryScreen",
         "appointmentScreen",
         "nameScreen",
-        "resultScreen"];
+        "resultScreen"
+    ];
+
+    // Determine direction based on whether we are saving history (Forward) or popping it (Back)
+    const isForward = addToHistory;
 
     if (addToHistory && currentScreen !== screenId) {
         screenHistory.push(currentScreen);
@@ -25,7 +28,13 @@ function showScreen(screenId, addToHistory = true) {
     screens.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            element.classList.toggle("active", id === screenId);
+            // Remove previous animation classes to allow re-triggering
+            element.classList.remove("active", "slide-forward", "slide-backward");
+
+            if (id === screenId) {
+                element.classList.add("active");
+                element.classList.add(isForward ? "slide-forward" : "slide-backward");
+            }
         }
     });
 }
