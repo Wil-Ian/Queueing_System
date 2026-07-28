@@ -302,6 +302,27 @@ function nextUser() {
         })
 }
 
+function callUser() {
+    authFetch(`/queue/live-status?windowId=${currentWindowId}`, {
+        method: "GET",
+    })
+        .then(response => {
+            if (response.status === 204) {
+                alert("No one in the queue.");
+            } else {
+                return response.json();
+            }
+        })
+        .then(queue => {
+            if (!queue) return;
+            speakText(`Now serving: ${queue.user.name}, from ${queue.user.consignee}. Please proceed to ${currentCategory} window`);
+        })
+        .catch(error => {
+            console.error("Failed to call in next user.", error);
+            alert("Failed to call in next user.");
+        })
+}
+
 function openTransferModal() {
     // Show the transfer options and enable only the buttons that are valid for
     // the current employee's category.
@@ -603,11 +624,31 @@ function showChangeUserModal() {
 }
 
 function showChangePassModal() {
-    document.getElementById("changePassModal").style.display = "block";
+    document.getElementById("changePassModal").style.display = "flex";
 }
 
 function escapeHtml(text) {
     const tempElement = document.createElement("div");
     tempElement.textContent= text;
     return tempElement.innerHTML;
+}
+
+
+function speakText(input) {
+    // Call the local audio service to announce the next customer verbally.
+    fetch("http://localhost:8880/v1/audio/speech", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            model: "kokoro",
+            voice: "af_heart",
+            input
+        })
+    })
+        .then(response => response.blob())
+        .then(audioBlob => {
+            const url = URL.createObjectURL(audioBlob);
+            const audio = new Audio(url);
+            audio.play();
+        });
 }
