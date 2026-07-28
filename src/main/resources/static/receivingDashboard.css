@@ -647,4 +647,74 @@ tbody tr:nth-child(odd) {
 /* CHANGE PASSWORD */
 .change-pass {
     display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(21, 26, 45, 0.45);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 40px 20px 20px;
+}
+
+.change-pass .modal-content {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    width: min(100%, 420px);
+    box-shadow: 0 16px 40px rgba(21, 26, 45, 0.22);
+    border: 1px solid rgba(21, 26, 45, 0.08);
+    text-align: center;
+}
+
+.change-pass .modal-content p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #151A2D;
+    margin-bottom: 12px;
+}
+
+.change-pass .modal-content label {
+    display: block;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #4b5563;
+    margin-bottom: 6px;
+}
+
+.change-pass .modal-content input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.change-pass .modal-content input[type="submit"] {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #151A2D, #2b3557);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.change-pass .modal-content input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(21, 26, 45, 0.15);
+}
+
+.change-pass .close-pass-modal {
+    float: right;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+}
+
+.change-pass .close-pass-modal:hover {
+    color: #151A2D;
 }
