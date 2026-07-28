@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class Window {
     private Queue queue;
 
     @Column(name = "is_active")
+    @JsonProperty("isActive")
     private Boolean isActive;
 
     @Column
