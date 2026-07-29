@@ -185,10 +185,15 @@ public class QueueService {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
             Queue queue = existingQueue.get();
-            if(queue.getCallCount() == null) {
-                queue.setCallCount(0);
+            if(queue.getRecallCount() == null) {
+                queue.setRecallCount(0);
             }
-            queue.setCallCount(queue.getCallCount() + 1);
+            queue.setRecallCount(queue.getRecallCount() + 1);
+            if(queue.getRecallCount() >= 4) {
+                queue.setRecallCount(0);
+                queue.setTimeStamp(LocalDateTime.now());
+                queue.setStatus("WAITING");
+            }
             return queueRepository.save(queue);
         }
         throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
