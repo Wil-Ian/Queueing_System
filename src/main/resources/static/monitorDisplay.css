@@ -303,3 +303,13 @@ tbody td {
 .priority-row td {
     color: #fff;
 }
+
+/* HIGHLIGHT */
+.newly-served {
+    background: #34c759 !important;
+    color: #ffffff;
+}
+
+.newly-served td {
+    color: #ffffff;
+}
