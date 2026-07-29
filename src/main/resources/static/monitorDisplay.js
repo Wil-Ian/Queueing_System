@@ -3,6 +3,7 @@
 let previousServingIds = new Set();
 let speechQueue = [];
 let isSpeaking = false;
+const EXCLUDED_TTS_CATEGORIES = ['Evaluation: Operations', 'Evaluation: Assessment'];
 
 function updateClock() {
     const now = new Date();
@@ -73,8 +74,8 @@ function loadQueue() {
                         <td>${serveItem.windowId}</td>
                         `;
                         const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
-                        const dedupKey = `${serveItem.queueId}-${serveItem.callCount}`;
-                        if(!previousServingIds.has(dedupKey)) {
+                        const dedupKey = `${serveItem.queueId}-${serveItem.callCount}-${serveItem.recallCount}`;
+                        if(!previousServingIds.has(dedupKey) && !EXCLUDED_TTS_CATEGORIES.includes(matchedWindow.category)) {
                             enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
                         }
                         previousServingIds.add(dedupKey);
