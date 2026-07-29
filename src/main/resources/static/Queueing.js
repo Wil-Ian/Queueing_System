@@ -160,6 +160,19 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
     const personName = document.getElementById("nameInput").value.trim();
     const consigneeName = document.getElementById("consigneeInput").value.trim();
 
+    const namePattern = /^[A-Za-z\s]+$/;
+    const consigneePattern = /^[A-Za-z0-9.\-&'\s]+$/;
+
+    if (!namePattern.test(personName)) {
+        alert("Name must only contain letters.");
+        return;
+    }
+
+    if (!consigneePattern.test(consigneeName)) {
+        alert("Consignee must only contain letters, numbers, and . - & ' characters.");
+        return;
+    }
+
     setLoading(true);
 
     fetch("/window")
