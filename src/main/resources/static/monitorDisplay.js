@@ -1,9 +1,12 @@
 // Monitor display script.
 // This file refreshes the visible queue data and announces the next person being served.
-let previousServingIds = new Set();
 let speechQueue = [];
 let isSpeaking = false;
 const EXCLUDED_TTS_CATEGORIES = ['Evaluation: Operations', 'Evaluation: Assessment'];
+let previousServingIds = new Set();
+let newlyServedTimestamps = new Map();
+const HIGHLIGHT_DURATION_MS = 5000;
+let isInitialLoad = true;
 
 function updateClock() {
     const now = new Date();
@@ -75,10 +78,22 @@ function loadQueue() {
                         `;
                         const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
                         const dedupKey = `${serveItem.queueId}-${serveItem.callCount}-${serveItem.recallCount}`;
-                        if(!previousServingIds.has(dedupKey) && !EXCLUDED_TTS_CATEGORIES.includes(matchedWindow.category)) {
-                            enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
+
+                        if (!previousServingIds.has(dedupKey)) {
+                            if (!isInitialLoad) {
+                                newlyServedTimestamps.set(dedupKey, Date.now());
+                                if (!EXCLUDED_TTS_CATEGORIES.includes(matchedWindow.category)) {
+                                    enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
+                                }
+                            }
                         }
                         previousServingIds.add(dedupKey);
+
+                        const firstSeen = newlyServedTimestamps.get(dedupKey);
+                        if (firstSeen && (Date.now() - firstSeen < HIGHLIGHT_DURATION_MS)) {
+                            row.classList.add("newly-served");
+                        }
+
                         servingTable.appendChild(row);
                     })
                 }
@@ -127,6 +142,7 @@ function loadQueue() {
                 fillTable(queueTable, firstBatch);
                 fillTable(queueTableTwo, secondBatch);
             }
+            isInitialLoad = false;
         })
         .catch(error => {
             console.error("Failed to fetch queue.", error);
