@@ -315,12 +315,18 @@ function callUser() {
         })
         .then(queue => {
             if (!queue) return;
-            speakText(`Now serving: ${queue.user.name}, from ${queue.user.consignee}. Please proceed to ${currentCategory} window`);
+            return authFetch(`/queue/${queue.queueId}/call-again`, {
+                method: "PUT"
+            });
+        })
+        .then(response => {
+            if (!response) return;
+            return response.json();
         })
         .catch(error => {
             console.error("Failed to call in next user.", error);
             alert("Failed to call in next user.");
-        })
+        });
 }
 
 function openTransferModal() {
@@ -631,24 +637,4 @@ function escapeHtml(text) {
     const tempElement = document.createElement("div");
     tempElement.textContent= text;
     return tempElement.innerHTML;
-}
-
-
-function speakText(input) {
-    // Call the local audio service to announce the next customer verbally.
-    fetch("http://localhost:8880/v1/audio/speech", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            model: "kokoro",
-            voice: "af_heart",
-            input
-        })
-    })
-        .then(response => response.blob())
-        .then(audioBlob => {
-            const url = URL.createObjectURL(audioBlob);
-            const audio = new Audio(url);
-            audio.play();
-        });
 }

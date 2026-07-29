@@ -110,4 +110,9 @@ public class QueueController {
     public void deleteQueue(@PathVariable Integer id) {
         queueService.deleteQueue(id);
     }
+
+    @PutMapping("/{id}/call-again")
+    public Queue callAgain(@PathVariable Integer id) {
+        return queueService.callAgain(id);
+    }
 }

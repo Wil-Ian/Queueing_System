@@ -1,6 +1,8 @@
 // Monitor display script.
 // This file refreshes the visible queue data and announces the next person being served.
 let previousServingIds = new Set();
+let speechQueue = [];
+let isSpeaking = false;
 
 function updateClock() {
     const now = new Date();
@@ -67,14 +69,15 @@ function loadQueue() {
                     allServing.forEach(serveItem => {
                         const row = document.createElement("tr");
                         row.innerHTML = `
-                    <td>${escapeHtml(serveItem.user.consignee)}</td>
-                    <td>${serveItem.windowId}</td>
-                    `;
+                        <td>${escapeHtml(serveItem.user.consignee)}</td>
+                        <td>${serveItem.windowId}</td>
+                        `;
                         const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
-                        if(!previousServingIds.has(serveItem.queueId)) {
-                            speakText(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
+                        const dedupKey = `${serveItem.queueId}-${serveItem.callCount}`;
+                        if(!previousServingIds.has(dedupKey)) {
+                            enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
                         }
-                        previousServingIds.add(serveItem.queueId);
+                        previousServingIds.add(dedupKey);
                         servingTable.appendChild(row);
                     })
                 }
@@ -144,21 +147,38 @@ function escapeHtml(text) {
     return tempElement.innerHTML;
 }
 
-function speakText(input) {
-    // Call the local audio service to announce the next customer verbally.
-    fetch("http://localhost:8880/v1/audio/speech", {
+function enqueueSpeech(text) {
+    speechQueue.push(text);
+    playNextInQueue();
+}
+
+function playNextInQueue() {
+    if (isSpeaking || speechQueue.length === 0) return;
+    isSpeaking = true;
+    const nextText = speechQueue.shift();
+
+    fetch("http://192.168.1.10:8880/v1/audio/speech", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             model: "kokoro",
             voice: "af_heart",
-            input
+            input: nextText
         })
     })
         .then(response => response.blob())
         .then(audioBlob => {
             const url = URL.createObjectURL(audioBlob);
             const audio = new Audio(url);
+            audio.onended = () => {
+                isSpeaking = false;
+                playNextInQueue();
+            };
             audio.play();
+        })
+        .catch(error => {
+            console.error("Speech playback failed.", error);
+            isSpeaking = false;
+            playNextInQueue();
         });
 }

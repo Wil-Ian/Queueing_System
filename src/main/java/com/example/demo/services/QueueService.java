@@ -155,7 +155,7 @@ public class QueueService {
                 }
                 queue.setStatus("WAITING");
                 queue.setCallCount(queue.getCallCount() + 1);
-                if(queue.getCallCount() >= 2) {
+                if(queue.getCallCount() >= 3) {
                     queue.setStatus("NO_RESPONSE");
                     queue.setActive(false);
                 }
@@ -179,5 +179,18 @@ public class QueueService {
     public void expireStaleQueueEntries() {
         queueRepository.expireStaleUsers();
         queueRepository.expireStaleQueues();
+    }
+
+    public Queue callAgain(Integer id) {
+        Optional<Queue> existingQueue = queueRepository.findById(id);
+        if(existingQueue.isPresent()) {
+            Queue queue = existingQueue.get();
+            if(queue.getCallCount() == null) {
+                queue.setCallCount(0);
+            }
+            queue.setCallCount(queue.getCallCount() + 1);
+            return queueRepository.save(queue);
+        }
+        throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
     }
 }
