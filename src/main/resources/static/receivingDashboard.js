@@ -41,6 +41,12 @@ function loadDashboard() {
             const transferBtn = document.getElementById("transferBtn");
             transferBtn.classList.toggle("hidden", currentCategory === "Cashier");
 
+            const callBtn = document.getElementById("callBtn");
+            const recallCard = document.getElementById("currentRecall")?.closest(".serving-card");
+            const isEvalWindow = currentCategory === "Evaluation: Operations" || currentCategory === "Evaluation: Assessment";
+            if (callBtn) callBtn.classList.toggle("hidden", isEvalWindow);
+            if (recallCard) recallCard.classList.toggle("hidden", isEvalWindow);
+
             if (employeeName) {
                 employeeName.innerHTML = escapeHtml(employee.name);
             }
@@ -86,6 +92,7 @@ function loadDashboard() {
                             }
                             row.innerHTML = `
                     <td>${escapeHtml(queue.user.name)}</td>
+                    <td>${escapeHtml(queue.user.consignee)}</td>
                     <td>${escapeHtml(queue.timeStamp)}</td>
                     <td>${escapeHtml(queue.user.priority)}</td>
                     <td>${escapeHtml(queue.callCount)}</td>
@@ -120,12 +127,14 @@ function loadDashboard() {
                     const currentVisited = document.getElementById("currentVisited");
                     const currentPriority = document.getElementById("currentPriority");
                     const currentMissed = document.getElementById("currentMissed");
+                    const currentRecall = document.getElementById("currentRecall");
                     if (response.status === 204) {
                         if (currentServing) {
                             currentServing.innerHTML = "No one being served.";
                             currentVisited.innerHTML = "";
                             currentPriority.innerHTML = "";
                             currentMissed.innerHTML = "";
+                            currentRecall.innerHTML = "";
                         }
                     } else {
                         return response.json();
@@ -137,6 +146,7 @@ function loadDashboard() {
                         const currentVisited = document.getElementById("currentVisited");
                         const currentPriority = document.getElementById("currentPriority");
                         const currentMissed = document.getElementById("currentMissed");
+                        const currentRecall = document.getElementById("currentRecall");
                         currentServingId = queue.queueId;
                         if (currentServing) {
                             currentServing.innerHTML = escapeHtml(queue.user.name);
@@ -149,6 +159,9 @@ function loadDashboard() {
                         }
                         if (currentMissed) {
                             currentMissed.innerHTML = escapeHtml(queue.callCount);
+                        }
+                        if (currentRecall) {
+                            currentRecall.innerHTML = escapeHtml(queue.recallCount);
                         }
                     }
                 })
@@ -315,6 +328,14 @@ function callUser() {
         })
         .then(queue => {
             if (!queue) return;
+            if (queue.recallCount >= 3) {
+                if (confirm("Are you sure you want to call again? (The stakeholder will be moved to the bottom of the queue on the 4th attempt.)")) {
+                    console.log("Stakeholder Moved");
+                } else {
+                    console.log("Action Cancelled ");
+                    return;
+                }
+            }
             return authFetch(`/queue/${queue.queueId}/call-again`, {
                 method: "PUT"
             });
@@ -322,6 +343,16 @@ function callUser() {
         .then(response => {
             if (!response) return;
             return response.json();
+        })
+        .then(updatedQueue => {
+            if (!updatedQueue) return;
+            if (updatedQueue.status === "WAITING") {
+                alert("Stakeholder has been moved to the bottom of the queue.");
+                loadDashboard();
+            } else {
+                alert("Stakeholder has been called.");
+                loadDashboard();
+            }
         })
         .catch(error => {
             console.error("Failed to call in next user.", error);
