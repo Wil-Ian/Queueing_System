@@ -7,6 +7,7 @@ let currentEmployeeId = null;
 let currentCategory = null;
 let missedCount = null;
 let dailyVolume = null;
+let justServedQueueId = null;
 
 const categoryButtons = {
     "Receiving": ["operationBtn", "assessBtn"],
@@ -282,6 +283,7 @@ function nextUser() {
         })
         .then(queue => {
             if(queue) {
+                justServedQueueId = queue.queueId;
                 authFetch(`/queue/${queue.queueId}`, {
                     method: "PUT",
                     body: JSON.stringify({
