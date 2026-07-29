@@ -39,6 +39,9 @@ public class Queue {
     @Column(name = "transferred_from")
     private Integer transferredFrom;
 
+    @Column(name = "recall_count")
+    private Integer recallCount;
+
     public Integer getQueueId() {
         return queueId;
     }
@@ -117,5 +120,13 @@ public class Queue {
 
     public void setTransferredFrom(Integer transferredFrom) {
         this.transferredFrom = transferredFrom;
+    }
+
+    public Integer getRecallCount() {
+        return recallCount;
+    }
+
+    public void setRecallCount(Integer recallCount) {
+        this.recallCount = recallCount;
     }
 }
