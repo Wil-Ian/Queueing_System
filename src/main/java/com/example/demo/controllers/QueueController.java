@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.ReportFilterRequest;
 import com.example.demo.models.Queue;
 import com.example.demo.services.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,5 +115,10 @@ public class QueueController {
     @PutMapping("/{id}/call-again")
     public Queue callAgain(@PathVariable Integer id) {
         return queueService.callAgain(id);
+    }
+
+    @PostMapping("/reports/custom")
+    public List<Queue> customReport(@RequestBody ReportFilterRequest filter) {
+        return queueService.customReport(filter);
     }
 }

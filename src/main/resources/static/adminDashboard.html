@@ -76,6 +76,17 @@
                     </ul>
                 </li>
 
+                <!-- Reports -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showReportsDashboard()" id="reportsBtn">
+                        <span class="material-symbols-rounded">bar_chart</span>
+                        <span class="nav-label">Reports</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item"><a class="nav-link dropdown-title">Reports</a></li>
+                    </ul>
+                </li>
+
                 <!-- Log Out -->
                 <li class="nav-item">
                     <a href="#" class="nav-link dropdown-toggle" onclick="logout()">
@@ -130,6 +141,67 @@
                 </tr>
                 </thead>
                 <tbody id="windowTable"></tbody>
+            </table>
+        </div>
+
+        <div class="table-wrapper reports-screen" id="reportsScreen" style="display: none;">
+            <div class="modal-content">
+                <p>Filter Report</p>
+
+                <label>Categories (leave unchecked = all):</label>
+                <div id="categoryCheckboxes"></div>
+
+                <label for="filterStatus">Status:</label>
+                <select id="filterStatus">
+                    <option value="">-- Any --</option>
+                    <option value="WAITING">WAITING</option>
+                    <option value="SERVING">SERVING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="TRANSFERRED">TRANSFERRED</option>
+                    <option value="NO_RESPONSE">NO_RESPONSE</option>
+                    <option value="QUEUE_EXPIRED">QUEUE_EXPIRED</option>
+                </select>
+
+                <label for="filterPriority">Priority:</label>
+                <select id="filterPriority">
+                    <option value="">-- Any --</option>
+                    <option value="REGULAR">REGULAR</option>
+                    <option value="PRIORITY">PRIORITY</option>
+                </select>
+
+                <label for="enteredFrom">Entered From:</label>
+                <input type="datetime-local" id="enteredFrom">
+                <label for="enteredTo">Entered To:</label>
+                <input type="datetime-local" id="enteredTo">
+
+                <label for="servingFrom">Serving Started From:</label>
+                <input type="datetime-local" id="servingFrom">
+                <label for="servingTo">Serving Started To:</label>
+                <input type="datetime-local" id="servingTo">
+
+                <label for="completedFrom">Completed From:</label>
+                <input type="datetime-local" id="completedFrom">
+                <label for="completedTo">Completed To:</label>
+                <input type="datetime-local" id="completedTo">
+
+                <input type="submit" value="Run Report" class="body-btn" onclick="runCustomReport()">
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Queue ID</th>
+                    <th>Name</th>
+                    <th>Consignee</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Entered</th>
+                    <th>Serving Started</th>
+                    <th>Completed</th>
+                </tr>
+                </thead>
+                <tbody id="reportsTable"></tbody>
             </table>
         </div>
     </div>

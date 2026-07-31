@@ -71,29 +71,22 @@ function loadQueue() {
                     servingTable.appendChild(row);
                 } else {
                     allServing.forEach(serveItem => {
+                        const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
+
+                        if (EXCLUDED_TTS_CATEGORIES.includes(matchedWindow?.category)) {
+                            return;
+                        }
+
                         const row = document.createElement("tr");
                         row.innerHTML = `
                         <td>${escapeHtml(serveItem.user.consignee)}</td>
-                        <td>${serveItem.windowId}</td>
+                        <td>${escapeHtml(matchedWindow?.category ?? "")}</td>
                         `;
-                        const matchedWindow = allWindows.find(window => window.windowId === serveItem.windowId);
-                        const dedupKey = `${serveItem.queueId}-${serveItem.callCount}-${serveItem.recallCount}`;
-
-                        if (!previousServingIds.has(dedupKey)) {
-                            if (!isInitialLoad) {
-                                newlyServedTimestamps.set(dedupKey, Date.now());
-                                if (!EXCLUDED_TTS_CATEGORIES.includes(matchedWindow.category)) {
-                                    enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
-                                }
-                            }
+                        const dedupKey = `${serveItem.queueId}-${serveItem.recallCount}`;
+                        if(!previousServingIds.has(dedupKey)) {
+                            enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow.category} window`);
                         }
                         previousServingIds.add(dedupKey);
-
-                        const firstSeen = newlyServedTimestamps.get(dedupKey);
-                        if (firstSeen && (Date.now() - firstSeen < HIGHLIGHT_DURATION_MS)) {
-                            row.classList.add("newly-served");
-                        }
-
                         servingTable.appendChild(row);
                     })
                 }
@@ -174,7 +167,7 @@ function playNextInQueue() {
     isSpeaking = true;
     const nextText = speechQueue.shift();
 
-    fetch("http://192.168.1.10:8880/v1/audio/speech", {
+    fetch("/tts/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

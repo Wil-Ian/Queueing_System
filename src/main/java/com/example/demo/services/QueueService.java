@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.ReportFilterRequest;
 import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Queue;
@@ -8,6 +9,7 @@ import com.example.demo.repositories.QueueRepository;
 import com.example.demo.repositories.WindowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -149,7 +151,7 @@ public class QueueService {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
             Queue queue = existingQueue.get();
-            if(queue.getStatus().equals("WAITING") || queue.getStatus().equals("SERVING")) {
+            if(queue.getStatus().equals("WAITING") || queue.getStatus().equals("SERVING") || queue.getStatus().equals("TRANSFERRED")) {
                 if(queue.getCallCount() == null) {
                     queue.setCallCount(0);
                 }
@@ -175,7 +177,10 @@ public class QueueService {
 
     // Scheduled cleanup job that runs at midnight to expire stale queue records.
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Schedules({
+            @Scheduled(cron = "0 0 0 * * *"), // Midnight
+            @Scheduled(cron = "0 0 6 * * *")  // 6 AM
+    })
     public void expireStaleQueueEntries() {
         queueRepository.expireStaleUsers();
         queueRepository.expireStaleQueues();
@@ -198,4 +203,22 @@ public class QueueService {
         }
         throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
     }
+    public List<Queue> customReport(ReportFilterRequest filter) {
+        boolean hasCategories = filter.getCategories() != null && !filter.getCategories().isEmpty();
+        List<String> categories = hasCategories ? filter.getCategories() : List.of("__NONE__");
+
+        return queueRepository.customReport(
+                hasCategories,
+                categories,
+                filter.getStatus(),
+                filter.getPriority(),
+                filter.getEnteredFrom(),
+                filter.getEnteredTo(),
+                filter.getServingStartedFrom(),
+                filter.getServingStartedTo(),
+                filter.getCompletedFrom(),
+                filter.getCompletedTo()
+        );
+    }
+
 }

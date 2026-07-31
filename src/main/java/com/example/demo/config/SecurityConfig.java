@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/queue/all-serving").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/queue").permitAll()
+                .requestMatchers(HttpMethod.POST, "/tts/speak").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/employee/*/admin-reset-password").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/employee/**").hasRole("ADMIN")

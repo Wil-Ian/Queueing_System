@@ -103,9 +103,9 @@ function showDeleteEmployeeModal() {
 function showChangePassModal() {
     document.getElementById("changePassModal").style.display = "flex";
 }
-
 function showEmployeeDashboard() {
     document.getElementById("windowScreen").style.display = "none";
+    document.getElementById("reportsScreen").style.display = "none";
     document.getElementById("employeeScreen").style.display = "block";
     renderEmployeeTable();
 }
@@ -113,7 +113,80 @@ function showEmployeeDashboard() {
 function showWindowDashboard() {
     document.getElementById("windowScreen").style.display = "block";
     document.getElementById("employeeScreen").style.display = "none";
+    document.getElementById("reportsScreen").style.display = "none";
     renderWindowTable()
+}
+
+function showReportsDashboard() {
+    document.getElementById("employeeScreen").style.display = "none";
+    document.getElementById("windowScreen").style.display = "none";
+    document.getElementById("reportsScreen").style.display = "block";
+    populateCategoryCheckboxes();
+}
+
+function populateCategoryCheckboxes() {
+    const container = document.getElementById("categoryCheckboxes");
+    container.innerHTML = "";
+    const uniqueCategories = [...new Set(windows.map(w => w.category))];
+    uniqueCategories.forEach(category => {
+        const label = document.createElement("label");
+        label.style.display = "block";
+        label.innerHTML = `<input type="checkbox" value="${escapeHtml(category)}" class="reportCategoryCheckbox"> ${escapeHtml(category)}`;
+        container.appendChild(label);
+    });
+}
+
+function runCustomReport() {
+    const checkedCategories = Array.from(document.querySelectorAll(".reportCategoryCheckbox:checked"))
+        .map(checkbox => checkbox.value);
+
+    const toIsoOrNull = (value) => value ? value : null;
+
+    const filter = {
+        categories: checkedCategories.length > 0 ? checkedCategories : null,
+        status: document.getElementById("filterStatus").value || null,
+        priority: document.getElementById("filterPriority").value || null,
+        enteredFrom: toIsoOrNull(document.getElementById("enteredFrom").value),
+        enteredTo: toIsoOrNull(document.getElementById("enteredTo").value),
+        servingStartedFrom: toIsoOrNull(document.getElementById("servingFrom").value),
+        servingStartedTo: toIsoOrNull(document.getElementById("servingTo").value),
+        completedFrom: toIsoOrNull(document.getElementById("completedFrom").value),
+        completedTo: toIsoOrNull(document.getElementById("completedTo").value)
+    };
+
+    authFetch(`/queue/reports/custom`, {
+        method: "POST",
+        body: JSON.stringify(filter)
+    })
+        .then(response => response.json())
+        .then(results => {
+            const reportsTable = document.getElementById("reportsTable");
+            reportsTable.innerHTML = "";
+            if (results.length === 0) {
+                reportsTable.innerHTML = `<tr><td colspan="9">No results found.</td></tr>`;
+                return;
+            }
+            results.forEach(queue => {
+                const matchedWindow = windows.find(w => w.windowId === queue.windowId);
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${queue.queueId}</td>
+                    <td>${escapeHtml(queue.user?.name || "")}</td>
+                    <td>${escapeHtml(queue.user?.consignee || "")}</td>
+                    <td>${escapeHtml(matchedWindow?.category || "")}</td>
+                    <td>${escapeHtml(queue.status)}</td>
+                    <td>${escapeHtml(queue.user?.priority || "")}</td>
+                    <td>${escapeHtml(queue.timeStamp || "")}</td>
+                    <td>${escapeHtml(queue.servingStartedAt || "")}</td>
+                    <td>${escapeHtml(queue.completedAt || "")}</td>
+                `;
+                reportsTable.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("Failed to run report.", error);
+            alert("Failed to run report.");
+        });
 }
 
 function setupEventListeners() {

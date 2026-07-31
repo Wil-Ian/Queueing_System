@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,4 +59,28 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     @Modifying
     @Query(value = "UPDATE queue SET status = 'QUEUE_EXPIRED', is_active = false WHERE is_active = true AND status IN ('WAITING', 'SERVING')", nativeQuery = true)
     void expireStaleQueues();
+
+    @Query(value = "SELECT q.* FROM queue q " +
+            "JOIN users u ON q.user_id = u.user_id " +
+            "JOIN \"window\" w ON q.window_id = w.window_id " +
+            "WHERE (CAST(:hasCategories AS boolean) = false OR w.category IN (:categories)) " +
+            "AND (CAST(:status AS varchar) IS NULL OR q.status = CAST(:status AS varchar)) " +
+            "AND (CAST(:priority AS varchar) IS NULL OR u.priority = CAST(:priority AS varchar)) " +
+            "AND (CAST(:enteredFrom AS timestamp) IS NULL OR q.time_stamp >= CAST(:enteredFrom AS timestamp)) " +
+            "AND (CAST(:enteredTo AS timestamp) IS NULL OR q.time_stamp <= CAST(:enteredTo AS timestamp)) " +
+            "AND (CAST(:servingStartedFrom AS timestamp) IS NULL OR q.serving_started_at >= CAST(:servingStartedFrom AS timestamp)) " +
+            "AND (CAST(:servingStartedTo AS timestamp) IS NULL OR q.serving_started_at <= CAST(:servingStartedTo AS timestamp)) " +
+            "AND (CAST(:completedFrom AS timestamp) IS NULL OR q.completed_at >= CAST(:completedFrom AS timestamp)) " +
+            "AND (CAST(:completedTo AS timestamp) IS NULL OR q.completed_at <= CAST(:completedTo AS timestamp)) " +
+            "ORDER BY q.time_stamp DESC", nativeQuery = true)
+    List<Queue> customReport(@Param("hasCategories") Boolean hasCategories,
+                             @Param("categories") List<String> categories,
+                             @Param("status") String status,
+                             @Param("priority") String priority,
+                             @Param("enteredFrom") LocalDateTime enteredFrom,
+                             @Param("enteredTo") LocalDateTime enteredTo,
+                             @Param("servingStartedFrom") LocalDateTime servingStartedFrom,
+                             @Param("servingStartedTo") LocalDateTime servingStartedTo,
+                             @Param("completedFrom") LocalDateTime completedFrom,
+                             @Param("completedTo") LocalDateTime completedTo);
 }

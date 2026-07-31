@@ -160,11 +160,11 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
     const personName = document.getElementById("nameInput").value.trim();
     const consigneeName = document.getElementById("consigneeInput").value.trim();
 
-    const namePattern = /^[A-Za-z\s]+$/;
+    const namePattern = /^[a-z\s]+$/;
     const consigneePattern = /^[A-Za-z0-9.\-&'\s]+$/;
 
     if (!namePattern.test(personName)) {
-        alert("Name must only contain letters.");
+        alert("Name must only contain lowercase letters.");
         return;
     }
 
