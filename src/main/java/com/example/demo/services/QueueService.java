@@ -5,6 +5,7 @@ import com.example.demo.exceptions.InvalidOperationException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Queue;
 import com.example.demo.models.Window;
+import com.example.demo.models.User;
 import com.example.demo.repositories.QueueRepository;
 import com.example.demo.repositories.WindowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,7 @@ public class QueueService {
     }
 
     // Update the queue entry state as the customer moves through the service process.
+    @Transactional
     public Queue updateQueue(Integer id, Queue updatedQueue) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
@@ -90,17 +92,20 @@ public class QueueService {
             if(updatedQueue.getStatus().equals("COMPLETED") || updatedQueue.getStatus().equals("NO_RESPONSE")) {
                 queue.setCompletedAt(LocalDateTime.now());
                 queue.setActive(false);
+                setInactiveUser(queue);
             }
             return queueRepository.save(queue);
         }
         throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
     }
 
+    @Transactional
     public void deleteQueue(Integer id) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
             Queue queue = existingQueue.get();
             queue.setActive(false);
+            setInactiveUser(queue);
             queueRepository.save(queue);
         } else {
             throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
@@ -147,6 +152,7 @@ public class QueueService {
     }
 
     // Reinsert a client into the queue after a missed or repeated call attempt.
+    @Transactional
     public Queue requeueEntry(Integer id) {
         Optional<Queue> existingQueue = queueRepository.findById(id);
         if(existingQueue.isPresent()) {
@@ -160,6 +166,7 @@ public class QueueService {
                 if(queue.getCallCount() >= 3) {
                     queue.setStatus("NO_RESPONSE");
                     queue.setActive(false);
+                    setInactiveUser(queue);
                 }
                 queue.setTimeStamp(LocalDateTime.now());
                 return queueRepository.save(queue);
@@ -168,6 +175,13 @@ public class QueueService {
             }
         }
         throw new ResourceNotFoundException("Queue with ID " + id + " not found.");
+    }
+
+    private void setInactiveUser(Queue queue) {
+        User user = queue.getUser();
+        if (user != null) {
+            user.setActive(false);
+        }
     }
 
     private boolean isTransferAllowed(String sourceCategory, String destinationCategory) {
