@@ -116,10 +116,28 @@ function loadQueue() {
                             }
                             row.innerHTML = `
                             <td>${escapeHtml(queueItem.user.consignee)}</td>
-                            <td>${escapeHtml(queueItem.user.priority)}</td>
-                        `;
+                            <td>${escapeHtml(queueItem.windowId ?? "")}</td>
+                            `;
                             table.appendChild(row);
+
+                        /* 
+                        ===============================================
+                        JUST IN CASE YOU WANT WINDOW NAME INSTEAD OF ID
+                        ===============================================
+                        
+                        items.forEach(queueItem => {
+                            const row = document.createElement("tr");
+                            if (queueItem.user.priority === "PRIORITY") {
+                                row.classList.add("priority-row");
+                            }
+                            const matchedWindow = allWindows.find(window => window.windowId === queueItem.windowId);
+                            row.innerHTML = `
+                            <td>${escapeHtml(queueItem.user.consignee)}</td>
+                            <td>${escapeHtml(matchedWindow?.category ?? "")}</td>
+                            `;
+                                table.appendChild(row);
                         });
+                        */
 
                         for (let i = items.length; i < rowsPerTable; i++) {
                             const emptyRow = document.createElement("tr");
