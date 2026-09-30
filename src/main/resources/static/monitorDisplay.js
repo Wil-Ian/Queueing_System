@@ -84,7 +84,7 @@ function loadQueue() {
                         `;
                         const dedupKey = `${serveItem.queueId}-${serveItem.recallCount}`;
                         if(!previousServingIds.has(dedupKey)) {
-                            enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to ${matchedWindow?.category ?? "your assigned"} window`);
+                            enqueueSpeech(`Now serving: ${serveItem.user.name}, from ${serveItem.user.consignee}. Please proceed to window ${serveItem.windowId}`);
                         }
                         previousServingIds.add(dedupKey);
                         servingTable.appendChild(row);
