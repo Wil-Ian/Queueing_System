@@ -119,6 +119,7 @@ function loadQueue() {
                             <td>${escapeHtml(queueItem.windowId ?? "")}</td>
                             `;
                             table.appendChild(row);
+                        });
 
                         /* 
                         ===============================================
