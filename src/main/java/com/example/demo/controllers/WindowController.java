@@ -23,6 +23,11 @@ public class WindowController {
         return windowService.getAllWindows();
     }
 
+    @GetMapping("/all")
+    public List<Window> getAllWindowsIncludingInactive() {
+        return windowService.getAllWindowsIncludingInactive();
+    }
+
     @PostMapping
     public Window createWindow(@RequestBody Window window) {
         return windowService.createWindow(window);
