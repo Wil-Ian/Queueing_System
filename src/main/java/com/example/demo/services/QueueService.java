@@ -60,12 +60,32 @@ public class QueueService {
     }
 
     // Create a new queue entry with the default waiting state and timestamp.
+    // deliberately NOT @Transactional, see note below
+    public Queue createQueue(Queue queue) {
+        User user = userRepository.findById(queue.getUser().getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+
+        if (queueRepository.existsByIsActiveTrueAndWindowIdAndUser_NameIgnoreCase(
+                queue.getWindowId(), user.getName().trim())) {
+            user.setActive(false);        // don't leave an orphan user row behind
+            userRepository.save(user);
+            throw new InvalidOperationException("Duplicate name already in queue.", "DUPLICATE_NAME");
+        }
+
+        queue.setUser(user);
+        queue.setTimeStamp(LocalDateTime.now());
+        queue.setStatus("WAITING");
+        queue.setActive(true);
+        return queueRepository.save(queue);
+    }
+    /* deprecated code, dont remove as backup
     public Queue createQueue(Queue queue) {
         queue.setTimeStamp(LocalDateTime.now());
         queue.setStatus("WAITING");
         queue.setActive(true);
         return queueRepository.save(queue);
     }
+    */
 
     // Update the queue entry state as the customer moves through the service process.
     @Transactional
