@@ -2,7 +2,7 @@
 // This file refreshes the visible queue data and announces the next person being served.
 let speechQueue = [];
 let isSpeaking = false;
-const EXCLUDED_TTS_CATEGORIES = ['Evaluation: Operations', 'Evaluation: Assessment'];
+const EXCLUDED_TTS_CATEGORIES = ['Evaluation: Operations', 'Evaluation: Assessment', 'Information Desk and Pass Control', 'Appointment'];
 let previousServingIds = new Set();
 let newlyServedTimestamps = new Map();
 const HIGHLIGHT_DURATION_MS = 5000;
