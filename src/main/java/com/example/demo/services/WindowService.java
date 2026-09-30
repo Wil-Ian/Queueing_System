@@ -53,4 +53,8 @@ public class WindowService {
             throw new ResourceNotFoundException("Window with ID " + id + " not found");
         }
     }
+
+    public List<Window> getAllWindowsIncludingInactive() {
+    return windowRepository.findAll();
+    }
 }
