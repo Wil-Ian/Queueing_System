@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/window").permitAll()
                 .requestMatchers(HttpMethod.GET, "/queue/all-queue").permitAll()
                 .requestMatchers(HttpMethod.GET, "/queue/all-serving").permitAll()
+                .requestMatchers(HttpMethod.GET, "/window/all").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.POST, "/queue").permitAll()
                 .requestMatchers(HttpMethod.POST, "/tts/speak").permitAll()
