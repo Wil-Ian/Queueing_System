@@ -9,6 +9,4 @@ import java.util.List;
 // The type after the model is the primary key
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByIsActiveTrue();
-    boolean existsByNameAndIsActiveTrue(String name);
-    String name(String name);
 }
