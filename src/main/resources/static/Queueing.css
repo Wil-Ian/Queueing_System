@@ -408,6 +408,37 @@ footer {
     margin: 0;
 }
 
+/* Selected category (toggled by JS). Listed with :hover so a sticky touch-hover can't override it. */
+.category_btn.selected,
+.category_btn.selected:hover {
+    background-color: #ffffff;
+    color: #002040;
+    font-weight: bold;
+    box-shadow: 0 0 0 5px #E2C97E, 0 0 18px 6px rgba(226, 201, 126, 0.55);
+}
+
+/* Next button: pinned bottom-left, mirroring the back button on the right.
+   The ID selector is needed to beat the 240px / 76px tile sizing rule above. */
+.category .body-main #categoryNext {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    width: auto;
+    min-width: 140px;
+    max-width: none;
+    height: auto;
+    padding: 14px 22px;
+    font-weight: bold;
+}
+
+/* Optional hint line under the heading */
+.category .body-main .category-hint {
+    width: 100%;
+    margin: 0 0 10px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
 /* Appointment screen */
 
 .appoint .body-main {
