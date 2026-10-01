@@ -2,7 +2,7 @@
 // This script controls the multi-step screen flow and stores the user choices
 // that are later submitted to the backend queueing services.
 let selectedStatus = "";
-let selectedCategory = "";
+let selectedCategory = [];
 let selectedOffice = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
@@ -53,7 +53,8 @@ function setLoading(isLoading) {
 
 function resetFlow() {
     selectedStatus = "";
-    selectedCategory = "";
+    selectedCategories = [];
+    document.querySelectorAll(".category_btn.selected").forEach(btn => btn.classList.remove("selected"));
     selectedOffice = "";
     screenHistory = [];
     currentScreen = "startScreen";
@@ -122,11 +123,25 @@ if (confirmPriorityButton) {
 // Category selection is stored here so the later submission step knows which
 // window category the visitor selected.
 const buttonCategory = document.querySelectorAll(".category_btn");
-buttonCategory.forEach(button => {
+
+// Category buttons now toggle on/off instead of jumping straight to the name screen.
+document.querySelectorAll(".category_btn").forEach(button => {
     button.addEventListener("click", function() {
-        selectedCategory = button.value;
-        showScreen("nameScreen");
+        button.classList.toggle("selected");
     });
+});
+
+document.getElementById("categoryNext")?.addEventListener("click", function() {
+    // Read the selection from the DOM so state can't drift from what's highlighted.
+    selectedCategories = [...document.querySelectorAll(".category_btn.selected")]
+        .map(btn => btn.value);
+
+    if (selectedCategories.length === 0) {
+        alert("Please select at least one transaction type.");
+        return;
+    }
+    selectedOffice = "";
+    showScreen("nameScreen");
 });
 
 // hide category, show appointments
@@ -173,65 +188,77 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
         return;
     }
 
-    setLoading(true);
+        setLoading(true);
 
-    fetch("/window")
-        .then(response => response.json())
-        .then(windows => {
-            const matchedWindow = windows.find(window => window.category === selectedCategory);
-            return fetch("/users", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: personName,
-                    consignee: consigneeName,
-                    priority: selectedStatus,
-                    office: selectedOffice
-                })
+        fetch("/window")
+            .then(response => response.json())
+            .then(windows => {
+                // Run the categories one after another so queue order stays predictable.
+                return selectedCategories.reduce((chain, category) => {
+                    return chain.then(() =>
+                        registerOne(windows, category, personName, consigneeName));
+                }, Promise.resolve());
             })
-                .then(response => {
-                    return response.json().then(body => {
-                        if (!response.ok) {
-                            const err = new Error(body.error);
-                            err.code = body.code;
-                            throw err;
-                        }
-                        return body;
-                    });
-                })
-                .then(createdUser => {
-                    return fetch("/queue", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            user: {
-                                userId: createdUser.userId
-                            },
-                            windowId: matchedWindow?.windowId
-                        })
-                    });
-                });
-        })
-        .then(() => {
-            setLoading(false);
-            showScreen("resultScreen");
-        })
-        .catch(error => {
-            console.error("Queue submission failed:", error);
-            if(error.code === "DUPLICATE_NAME") {
-                alert("Duplicate name already in queue.");
-                setLoading(false);
-                showScreen("nameScreen");
-            } else {
+            .then(() => {
                 setLoading(false);
                 showScreen("resultScreen");
-            }
+            })
+            .catch(error => {
+                console.error("Queue submission failed:", error);
+                setLoading(false);
+                if (error.code === "DUPLICATE_NAME") {
+                    alert("This name is already in the queue for " + error.category + ".");
+                    showScreen("nameScreen");
+                } else {
+                    showScreen("resultScreen");
+                }
+            });
+    });
 
+    // Parses the JSON body and throws if the server returned an error status.
+    function checkResponse(response) {
+        return response.json().then(body => {
+            if (!response.ok) {
+                const err = new Error(body.error);
+                err.code = body.code;
+                throw err;
+            }
+            return body;
         });
+    }
+
+    // One full registration: create the user row, then the queue row for one category.
+    function registerOne(windows, category, personName, consigneeName) {
+        const matchedWindow = windows.find(w => w.category === category);
+        if (!matchedWindow) {
+            return Promise.reject(new Error("No active window for " + category));
+        }
+
+        return fetch("/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: personName,
+                consignee: consigneeName,
+                priority: selectedStatus,
+                office: selectedOffice
+            })
+        })
+            .then(checkResponse)
+            .then(createdUser => fetch("/queue", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user: { userId: createdUser.userId },
+                    windowId: matchedWindow.windowId
+                })
+            }))
+            .then(checkResponse)   // this is the check that was missing before
+            .catch(err => {
+                err.category = category;   // so the catch above can say which one failed
+                throw err;
+            });   
+    }
 });
 
 // time function
