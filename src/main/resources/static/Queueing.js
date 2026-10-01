@@ -2,7 +2,7 @@
 // This script controls the multi-step screen flow and stores the user choices
 // that are later submitted to the backend queueing services.
 let selectedStatus = "";
-let selectedCategory = [];
+let selectedCategories = [];
 let selectedOffice = "";
 let currentScreen = "startScreen";
 let screenHistory = [];
@@ -120,10 +120,6 @@ if (confirmPriorityButton) {
     });
 }
 
-// Category selection is stored here so the later submission step knows which
-// window category the visitor selected.
-const buttonCategory = document.querySelectorAll(".category_btn");
-
 // Category buttons now toggle on/off instead of jumping straight to the name screen.
 document.querySelectorAll(".category_btn").forEach(button => {
     button.addEventListener("click", function() {
@@ -152,7 +148,9 @@ document.getElementById("appoint")?.addEventListener("click", function() {
 // hide appointments, show name
 document.getElementById("appointSubmit")?.addEventListener("click", function() {
     selectedOffice = document.getElementById("officeSelect").value;
-    selectedCategory = "Appointment";
+    selectedCategories = ["Appointment"];
+    document.querySelectorAll(".category_btn.selected")
+        .forEach(btn => btn.classList.remove("selected"));
     showScreen("nameScreen");
 });
 
