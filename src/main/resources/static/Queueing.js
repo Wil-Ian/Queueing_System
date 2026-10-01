@@ -259,7 +259,6 @@ document.getElementById("nameSubmit").addEventListener("click", function() {
                 throw err;
             });   
     }
-});
 
 // time function
 function updateDateTime() {
