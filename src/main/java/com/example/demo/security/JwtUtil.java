@@ -35,6 +35,7 @@ public class JwtUtil {
                 .subject(email)
                 .claim("role", role)
                 .claim("jti", jti)
+                .claim("type", "access")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
                 .signWith(key)
@@ -45,6 +46,7 @@ public class JwtUtil {
     public String generateRefreshToken(String email) {
         return Jwts.builder()
                 .subject(email)
+                .claim("type", "refresh")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .signWith(key)
@@ -70,6 +72,10 @@ public class JwtUtil {
 
     public String extractJti(String token) {
         return extractClaims(token).get("jti", String.class);
+    }
+
+    public String extractType(String token) {
+        return extractClaims(token).get("type", String.class);
     }
 
     // Return true when the token is structurally valid and has not expired.
