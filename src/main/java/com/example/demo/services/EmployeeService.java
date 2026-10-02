@@ -78,9 +78,9 @@ public class EmployeeService {
         }
     }
 
-    public Employee patchName(Integer id, String name) {
+    public Employee patchName(Integer id, String callerEmail, String name) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
-        if(existingEmployee.isPresent()) {
+        if (existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
             if (!employee.getEmail().equals(callerEmail)) {
                 throw new InvalidOperationException("You can only modify your own account.", "NOT_OWNER");
@@ -92,16 +92,15 @@ public class EmployeeService {
     }
 
     // Change an employee password after verifying the current password.
-    public Employee patchEmployeePassword(Integer id, String password, String newPassword) {
+    public Employee patchEmployeePassword(Integer id, String callerEmail, String password, String newPassword) {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
-        if(existingEmployee.isPresent()) {
+        if (existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
             if (!employee.getEmail().equals(callerEmail)) {
                 throw new InvalidOperationException("You can only modify your own account.", "NOT_OWNER");
             }
-            if(passwordEncoder.matches(password, employee.getPassword())) {
-                String hashedPassword = passwordEncoder.encode(newPassword);
-                employee.setPassword(hashedPassword);
+            if (passwordEncoder.matches(password, employee.getPassword())) {
+                employee.setPassword(passwordEncoder.encode(newPassword));
                 return employeeRepository.save(employee);
             } else {
                 throw new InvalidCredentialsException("Password does not match.");
