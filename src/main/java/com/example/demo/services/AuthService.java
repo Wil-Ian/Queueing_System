@@ -86,14 +86,16 @@ public class AuthService {
         String email = util.extractEmail(refreshToken);
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
         Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
-        if(existingEmployee.isPresent()) {
+        if (existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
             if (!Boolean.TRUE.equals(employee.getActive())) {
                 throw new InvalidCredentialsException("Account is deactivated.");
             }
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
             return authResponse;
-        } else if(existingAdmin.isPresent()) {
+        } else if (existingAdmin.isPresent()) {
+            Admin admin = existingAdmin.get();
             if (!Boolean.TRUE.equals(admin.getActive())) {
                 throw new InvalidCredentialsException("Account is deactivated.");
             }
