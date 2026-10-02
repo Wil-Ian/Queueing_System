@@ -41,7 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
 
             // Verify the token signature and expiration before trusting it.
-            if(util.isTokenValid(token)) {
+            if (util.isTokenValid(token) && "access".equals(util.extractType(token))) {
                 String jti = util.extractJti(token);
 
                 // Reject tokens that were explicitly logged out or invalidated earlier.
