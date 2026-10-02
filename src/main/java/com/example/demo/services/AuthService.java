@@ -72,6 +72,9 @@ public class AuthService {
         String email = util.extractEmail(refreshToken);
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
         Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
+        if (!util.isTokenValid(refreshToken) || !"refresh".equals(util.extractType(refreshToken))) {
+            throw new InvalidCredentialsException("Invalid refresh token.");
+        }
         if(existingEmployee.isPresent()) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
