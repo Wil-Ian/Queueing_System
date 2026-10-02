@@ -2,10 +2,12 @@ package com.example.demo.controllers;
 
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.LogoutRequest;
 import com.example.demo.exceptions.InvalidCredentialsException;
 import com.example.demo.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/auth")
