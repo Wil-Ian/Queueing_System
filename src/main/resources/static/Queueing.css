@@ -398,7 +398,7 @@ footer {
     margin-bottom: 20px;
 }
 
-.category .body-main input[type="button"]:not(.back_btn) {
+.category .body-main .body_btn:not(.back_btn) {
     flex: 0 1 240px;    
     max-width: 240px;
     height: 76px;        
@@ -406,6 +406,11 @@ footer {
     white-space: normal;  
     line-height: 1.2;      
     margin: 0;
+}
+
+.category_btn.selected::before {
+    content: "✓ ";
+    font-weight: bold;
 }
 
 /* Selected category (toggled by JS). Listed with :hover so a sticky touch-hover can't override it. */
