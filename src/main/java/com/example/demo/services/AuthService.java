@@ -38,10 +38,14 @@ public class AuthService {
 
     // Authenticate a user by email and password, then return the correct role-based token pair.
     public AuthResponse login(String email, String password) {
+        
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
         Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
         if(existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
+            if (!Boolean.TRUE.equals(employee.getActive())) {
+                throw new InvalidCredentialsException("Account is deactivated.");
+            }
             if(passwordEncoder.matches(password, employee.getPassword())) {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
@@ -53,6 +57,9 @@ public class AuthService {
             }
         } else if(existingAdmin.isPresent()) {
             Admin admin = existingAdmin.get();
+            if (!Boolean.TRUE.equals(admin.getActive())) {
+                throw new InvalidCredentialsException("Account is deactivated.");
+            }
             if(passwordEncoder.matches(password, admin.getPassword())) {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setAccessToken(util.generateToken(email, "ADMIN"));
@@ -80,10 +87,16 @@ public class AuthService {
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
         Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
         if(existingEmployee.isPresent()) {
+            if (!Boolean.TRUE.equals(employee.getActive())) {
+                throw new InvalidCredentialsException("Account is deactivated.");
+            }
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
             return authResponse;
         } else if(existingAdmin.isPresent()) {
+            if (!Boolean.TRUE.equals(admin.getActive())) {
+                throw new InvalidCredentialsException("Account is deactivated.");
+            }
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(util.generateToken(email, "ADMIN"));
             return authResponse;
