@@ -69,12 +69,16 @@ public class AuthService {
 
     // Issue a new access token from a refresh token without forcing the user to log in again.
     public AuthResponse refresh(String refreshToken) {
-        String email = util.extractEmail(refreshToken);
-        Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
-        Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
         if (!util.isTokenValid(refreshToken) || !"refresh".equals(util.extractType(refreshToken))) {
             throw new InvalidCredentialsException("Invalid refresh token.");
         }
+        if (blacklistedTokensRepository.existsByJti(util.extractJti(refreshToken))) {
+            throw new InvalidCredentialsException("Refresh token has been revoked.");
+        }
+
+        String email = util.extractEmail(refreshToken);
+        Optional<Employee> existingEmployee = employeeRepository.findByEmail(email);
+        Optional<Admin> existingAdmin = adminRepository.findByEmail(email);
         if(existingEmployee.isPresent()) {
             AuthResponse authResponse = new AuthResponse();
             authResponse.setAccessToken(util.generateToken(email, "EMPLOYEE"));
@@ -89,11 +93,16 @@ public class AuthService {
     }
 
     // Blacklist the current token so it cannot be reused after logout.
-    public void logout(String token) {
-        String jti = util.extractJti(token);
+    public void logout(String accessToken, String refreshToken) {
+    blacklist(util.extractJti(accessToken));
+        if (refreshToken != null && util.isTokenValid(refreshToken)) {
+            blacklist(util.extractJti(refreshToken));
+        }
+    }
 
-        BlacklistedTokens blacklistedToken = new BlacklistedTokens();
-        blacklistedToken.setJti(jti);
-        blacklistedTokensRepository.save(blacklistedToken);
+    private void blacklist(String jti) {
+    BlacklistedTokens t = new BlacklistedTokens();
+        t.setJti(jti);
+        blacklistedTokensRepository.save(t);
     }
 }
