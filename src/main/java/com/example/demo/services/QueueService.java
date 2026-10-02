@@ -8,11 +8,13 @@ import com.example.demo.models.Window;
 import com.example.demo.models.User;
 import com.example.demo.repositories.QueueRepository;
 import com.example.demo.repositories.WindowRepository;
+import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,12 +30,16 @@ public class QueueService {
 
     private final QueueRepository queueRepository;
     private final WindowRepository windowRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public QueueService(QueueRepository queueRepository, WindowRepository windowRepository) {
-        this.queueRepository = queueRepository;
-        this.windowRepository = windowRepository;
-    }
+    public QueueService(QueueRepository queueRepository,
+                        WindowRepository windowRepository,
+                        UserRepository userRepository) {
+    this.queueRepository = queueRepository;
+    this.windowRepository = windowRepository;
+    this.userRepository = userRepository;
+}
 
     public List<Queue> getAllQueues() {
         return queueRepository.findByIsActiveTrue();
