@@ -38,6 +38,12 @@ public class SecurityConfig {
             }))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/auth/refresh").permitAll()
+                .requestMatchers(HttpMethod.POST, "/employee").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/employee/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/employee").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/window").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/window/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/window/*").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/*.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*.css").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*.js").permitAll()
