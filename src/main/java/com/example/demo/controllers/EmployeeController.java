@@ -53,8 +53,9 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}/password")
-    public Employee patchPassword(@PathVariable Integer id, @RequestBody ChangePasswordRequest request) {
-        return employeeService.patchEmployeePassword(id, request.getCurrentPassword(), request.getNewPassword());
+    public Employee patchPassword(@PathVariable Integer id, @RequestBody ChangePasswordRequest request, Principal principal) {
+        return employeeService.patchEmployeePassword(id, principal.getName(),
+            request.getCurrentPassword(), request.getNewPassword());
     }
 
     @PatchMapping("/{id}/admin-reset-password")
