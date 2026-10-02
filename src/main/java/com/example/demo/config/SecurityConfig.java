@@ -37,7 +37,7 @@ public class SecurityConfig {
                 return config;
             }))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/login", "/auth/refresh").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*.css").permitAll()
                 .requestMatchers(HttpMethod.GET, "/*.js").permitAll()
