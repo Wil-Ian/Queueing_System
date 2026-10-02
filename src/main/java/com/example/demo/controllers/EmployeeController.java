@@ -48,8 +48,8 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}/name")
-    public Employee patchName(@PathVariable Integer id, @RequestBody String name) {
-        return employeeService.patchName(id, name);
+    public Employee patchName(@PathVariable Integer id, @RequestBody String name, Principal principal) {
+        return employeeService.patchName(id, principal.getName(), name);
     }
 
     @PatchMapping("/{id}/password")
