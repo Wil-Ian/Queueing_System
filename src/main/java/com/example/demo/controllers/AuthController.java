@@ -23,10 +23,11 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(@RequestHeader("Authorization") String authHeader) {
-        if(authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            authService.logout(token);
+    public String logout(@RequestHeader("Authorization") String authHeader, @RequestBody(required = false) LogoutRequest request) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String accessToken = authHeader.substring(7);
+            String refreshToken = request != null ? request.getRefreshToken() : null;
+            authService.logout(accessToken, refreshToken);
             return "Logged out successfully.";
         }
         return "Error with header.";
