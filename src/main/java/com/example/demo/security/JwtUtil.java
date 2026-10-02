@@ -47,6 +47,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(email)
                 .claim("type", "refresh")
+                .claim("jti", UUID.randomUUID().toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .signWith(key)
