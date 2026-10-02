@@ -26,7 +26,7 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     @Query(value = "SELECT AVG(EXTRACT(EPOCH FROM (completed_at - serving_started_at))/60) FROM queue WHERE window_id = :windowId AND DATE(completed_at) = CURRENT_DATE AND status = 'COMPLETED'", nativeQuery = true)
     Double avgServiceTimeToday(@Param("windowId") Integer windowId);
 
-    @Query(value = "SELECT SUM(EXTRACT(EPOCH FROM (completed_at - serving_started_at))/60) / (SELECT COUNT(*) FROM \"window\" WHERE window_id = :windowId AND is_active = true) / (9 * 60) * 100 FROM queue WHERE DATE(completed_at) = CURRENT_DATE AND status = 'COMPLETED'", nativeQuery = true)
+    @Query(value = "SELECT COALESCE(SUM(EXTRACT(EPOCH FROM (completed_at - serving_started_at))/60), 0) / (9 * 60) * 100 FROM queue WHERE window_id = :windowId AND DATE(completed_at) = CURRENT_DATE AND status = 'COMPLETED'", nativeQuery = true)
     Double utilizationRate(@Param("windowId") Integer windowId);
 
     @Query(value = "SELECT COUNT(*) FROM queue WHERE window_id = :windowId AND status IN ('WAITING', 'TRANSFERRED')", nativeQuery = true)
