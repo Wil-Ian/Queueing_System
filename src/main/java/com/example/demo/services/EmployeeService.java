@@ -82,6 +82,9 @@ public class EmployeeService {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
+            if (!employee.getEmail().equals(callerEmail)) {
+                throw new InvalidOperationException("You can only modify your own account.", "NOT_OWNER");
+            }
             employee.setName(name);
             return employeeRepository.save(employee);
         }
@@ -93,6 +96,9 @@ public class EmployeeService {
         Optional<Employee> existingEmployee = employeeRepository.findById(id);
         if(existingEmployee.isPresent()) {
             Employee employee = existingEmployee.get();
+            if (!employee.getEmail().equals(callerEmail)) {
+                throw new InvalidOperationException("You can only modify your own account.", "NOT_OWNER");
+            }
             if(passwordEncoder.matches(password, employee.getPassword())) {
                 String hashedPassword = passwordEncoder.encode(newPassword);
                 employee.setPassword(hashedPassword);
