@@ -103,6 +103,7 @@ public class QueueService {
             queue.setWindowId(updatedQueue.getWindowId());
             queue.setStatus(updatedQueue.getStatus());
             if(updatedQueue.getStatus().equals("TRANSFERRED")) {
+                queue.setTransferredFrom(originalWindowId);
                 Window sourceWindow = windowRepository.findById(originalWindowId)
                         .orElseThrow(() -> new ResourceNotFoundException("Source Window with ID " + originalWindowId + " not found."));
                 Window destinationWindow = windowRepository.findById(updatedQueue.getWindowId())
